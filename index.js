@@ -2,6 +2,7 @@ var path = require('path');
 var express = require('express');
 
 var app = express();
+var port = process.env.PORT || 8000;
 
 app.use(express.static('static'));
 
@@ -25,4 +26,4 @@ app.get('/:user', function(req,res) {
   res.sendFile(path.join(__dirname, 'user.html'));
 });
 
-app.listen(8000);
+app.listen(port);

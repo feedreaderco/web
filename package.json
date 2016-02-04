@@ -1,0 +1,23 @@
+{
+  "name": "feedreader-website",
+  "version": "1.0.0",
+  "description": "What happens at feedreader.co",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feedreaderco/web.git"
+  },
+  "author": "Arpith Siromoney",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/feedreaderco/web/issues"
+  },
+  "homepage": "https://github.com/feedreaderco/web#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}

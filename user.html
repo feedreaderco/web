@@ -72,7 +72,7 @@ var h2 = document.getElementById('user')
 }
 , api = function(method,endpoint,onload,params) {
   var xhr = new XMLHttpRequest()
-  xhr.open(method,'https://feedreader.co/api/v1/'+endpoint)
+  xhr.open(method,'https://api.feedreader.co/v1/'+endpoint)
   if (method!='GET') xhr.setRequestHeader('authorization','Basic '+base64_encode(localStorage.token+':'))
   xhr.onload = onload
   if (params) {

@@ -293,7 +293,7 @@ var refresh_feeds = function() {
 var get_article = function(hash, callback) {
   if (!!hash) api('GET', '/articles/' + hash, function() {
     try {
-      article = JSON.parse(this.responseText);
+      article = JSON.parse(this.responseText).article;
       if (!document.getElementById(hash)) display_article(article, callback);
       else callback();
     } 

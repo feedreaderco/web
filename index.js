@@ -7,23 +7,23 @@ var port = process.env.PORT || 8000;
 app.use(express.static('static'));
 
 app.get('/:user/labels/:label*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'label.html'));
+  res.sendFile(path.join(__dirname, 'static/label.html'));
 });
 
 app.get('/:user/folders/:folder*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'label.html'));
+  res.sendFile(path.join(__dirname, 'static/label.html'));
 });
 
 app.get('/:user/feeds*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'label.html'));
+  res.sendFile(path.join(__dirname, 'static/label.html'));
 });
 
 app.get('/feeds/*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'label.html'));
+  res.sendFile(path.join(__dirname, 'static/label.html'));
 });
 
 app.get('/:user', function(req,res) {
-  res.sendFile(path.join(__dirname, 'user.html'));
+  res.sendFile(path.join(__dirname, 'static/user.html'));
 });
 
 app.listen(port);

@@ -22,6 +22,4 @@ function api(method, endpoint, onload, params) {
   }
 }
 
-  xhr.open(method, 'https://api.feedreader.co/v1/' + endpoint);
-
 export default api;

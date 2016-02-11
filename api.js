@@ -2,6 +2,15 @@ function base64_encode(str) {
   return window.btoa(unescape(encodeURIComponent(str)));
 }
 
+function parseResponseText(responseText) {
+  try {
+    var parsedResponse = JSON.parse(responseText);
+    return parsedResponse;
+  } catch(e) {
+    return {};
+  }
+}
+
 function api(method, endpoint, onload, params) {
   var xhr = new XMLHttpRequest();
   var urlparams = '';
@@ -13,7 +22,12 @@ function api(method, endpoint, onload, params) {
   if (method != 'GET') {
     xhr.setRequestHeader('authorization', 'Basic ' + base64_encode(token + ':'));
   }
-  xhr.onload = onload;
+  
+  xhr.onload = function() {
+    var parsedResponse = parseResponseText(this.responseText);
+    callback(parsedResponse);
+  };
+
   if (params) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(params);

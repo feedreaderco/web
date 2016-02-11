@@ -13,27 +13,19 @@ var viewedFeed = '';
 
 function add_to_folder(folderButton) {
   var folderName = folderButton.value;
-  api('POST', user + '/folders/' + encodeURIComponent(folderName), function() {
-    try {
-      var p = JSON.parse(this.responseText);
-      var success = p.success;
-    } catch (e) {
-      var success = false;
+  api('POST', user + '/folders/' + encodeURIComponent(folderName), function(response) {
+    if (response.success) {
+      folderButton.className = 'pillbox';
     }
-    if (success) folderButton.className = 'pillbox';
   }, 'xmlurl=' + viewedFeed);
 }
 
 function remove_from_folder(folderButton) {
   var folderName = folderButton.value;
-  api('DELETE', user + '/folders/' + encodeURIComponent(folderName), function() {
-    try {
-      var p = JSON.parse(this.responseText);
-      var success = p.success;
-    } catch (e) {
-      var success = false;
+  api('DELETE', user + '/folders/' + encodeURIComponent(folderName), function(response) {
+    if (response.success) {
+      folderButton.className = 'pillbox empty';
     }
-    if (success) folderButton.className = 'pillbox empty'; 
   }, 'xmlurl=' + viewedFeed);
 }
 
@@ -62,12 +54,11 @@ function get_folders(callback) {
   var foldersDiv = document.getElementById('folders');
   if (pathname_split[1] === 'feeds') {
     viewedFeed = pathname.slice(7, -1);
-    api('GET', user + '/folders', function() {
-      var parsedJSON = JSON.parse(this.responseText);
-      if ((parsedJSON.allFolders) && (parsedJSON.allFolders.length)) {
-        parsedJSON.allFolders.forEach(function(folderName, position) {
+    api('GET', user + '/folders', function(response) {
+      if (response.allFolders && response.folders) {
+        response.allFolders.forEach(function(folderName, position) {
           folderButton = create_folder_button(folderName);
-          if (parsedJSON.folders.indexOf(folderName) != -1) folderButton.className = 'pillbox';
+          if (response.folders.indexOf(folderName) != -1) folderButton.className = 'pillbox';
           foldersDiv.appendChild(folderButton);
         });
         var addFolder = document.createElement('input');
@@ -95,15 +86,9 @@ function get_folders(callback) {
       callback();
     }, 'xmlurl=' + viewedFeed);
   } else {
-    api('GET', user + '/folders', function() {
-      try {
-        var p = JSON.parse(this.responseText);
-        var folders = p.folders;
-      } catch (e) {
-        var folders = [];
-      }
-      if (folders.length) {
-        foldersDiv.innerHTML = folders.map(function(folder) {
+    api('GET', user + '/folders', function(response) {
+      if (response.folders) {
+        foldersDiv.innerHTML = response.folders.map(function(folder) {
           return '<a href=/' + user + '/folders/' + encodeURIComponent(folder) + ' class=pillbox>' + folder + '</a>';
         }).join(' ');
       }
@@ -121,37 +106,23 @@ function add_label(newLabel) {
   newLabelLink.innerHTML = value;
   newLabel.parentElement.insertBefore(newLabelLink, newLabel);
   newLabel.style.display = 'none';
-  api('POST', user + '/labels/' + encodeURIComponent(value), function() {
-    try {
-      var p = JSON.parse(this.responseText);
-      var success = p.success;
-    } catch (e) {
-      var success = false;
+  api('POST', user + '/labels/' + encodeURIComponent(value), function(response) {
+    if (response.success) {
+      newLabelLink.className = 'pillbox'; 
     }
-    if (success) newLabelLink.className = 'pillbox'; 
   }, 'hash=' + newLabel.parentElement.id);
 }
 
 function get_labels(callback) {
-  api('GET', user + '/labels', function() {
-    try {
-      var p = JSON.parse(this.responseText);
-      var labels = p.labels;
-    } catch (e) {
-      var labels = [];
-    }
-    if (labels.length) {
-      labelNames = labels;
-      labels.forEach(function(feedLabel) {
-        api('GET', user + '/labels/' + feedLabel, function() {
+  api('GET', user + '/labels', function(response) {
+    if (response.labels) {
+      labelNames = response.labels;
+      response.labels.forEach(function(feedLabel) {
+        api('GET', user + '/labels/' + feedLabel, function(response) {
           labelArticles[feedLabel] = [];
-          try {
-            var p = JSON.parse(this.responseText);
-            var theseArticles = p.articles;
-          } catch (e) {
-            var theseArticles = [];
+          if (response.articles) {
+            labelArticles[feedLabel] = response.articles;
           }
-          if (theseArticles.length) labelArticles[feedLabel] = theseArticles;
         });
       });
     }
@@ -161,16 +132,10 @@ function get_labels(callback) {
 
 function get_articles(callback) {
   var pathname_stripped = pathname.slice(1, -1);
-  api('GET', pathname_stripped, function() {
-    try {
-      var p = JSON.parse(this.responseText);
-      var theseArticles = p.articles;
-    } catch (e) {
-      var theseArticles = null;
-    }
-    if (theseArticles) {
+  api('GET', pathname_stripped, function(response) {
+    if (response.articles) {
       var i = 0;
-      articles = theseArticles;
+      articles = response.articles;
       if (hash) i = articles.indexOf(hash);
       if (i<0) i = 0;
       if (articles[i]) get_article(articles[i], function() {
@@ -192,40 +157,36 @@ function get_articles(callback) {
 }
 
 function refresh_feeds() {
-  if (token) api('GET', user + '/feeds', function() {
-    try {
-      var p = JSON.parse(this.responseText);
-      var feeds = p.feeds;
-    } catch (e) {
-      var feeds = null;
-    }
-    if (feeds) feeds.forEach(function(feed) {
-      api('GET', 'feeds/' + feed.key, function() {
-        try {
-          var p = JSON.parse(this.responseText);
-          var all_articles = p.articles;
-        } catch (e) {
-          var all_articles = null;
-        }
-        if (all_articles) console.log('Refreshed ' + feed.title + ', ' + all_articles.length + ' articles so far');
+  if (token) api('GET', user + '/feeds', function(response) {
+    if (response.feeds) {
+      response.feeds.forEach(function(feed) {
+        api('GET', 'feeds/' + feed.key, function(response) {
+          if (response.articles) {
+            console.log('Refreshed ' + feed.title + ', ' + response.articles.length + ' articles so far');
+          }
+        });
       });
-    });
+    }
   });
 }
 
 function get_article(hash, callback) {
-  if (!!hash) api('GET', 'articles/' + hash, function() {
-    try {
-      article = JSON.parse(this.responseText).article;
-      if (!document.getElementById(hash)) display_article(article, callback);
-      else callback();
-    } 
-    catch (e) {
-      console.error('Could not parse articles/' + hash, e.message);
-      callback();
-    }
-  });
-  else callback();
+  if (!!hash) {
+    api('GET', 'articles/' + hash, function(response) {
+      if (response.article) {
+        if (!document.getElementById(hash)) {
+          display_article(response.article, callback);
+        } else {
+          callback();
+        }
+      } else {
+        console.error('Could not parse articles/' + hash, e.message);
+        callback();
+      }
+    });
+  } else {
+    callback();
+  }
 }
 
 function display_article(article, callback) {
@@ -248,8 +209,11 @@ function display_article(article, callback) {
   labels.id = article.hash;
   labels.className = 'minor-margin-top';
   labels.innerHTML = labelNames.map(function(labelName) {
-    if (labelArticles[labelName].indexOf(article.hash) === -1) return '';
-    else return '<a href=/' + user + '/labels/' + encodeURIComponent(labelName) + ' class=pillbox>' + labelName + '</a>';
+    if (labelArticles[labelName].indexOf(article.hash) === -1) {
+      return '';
+    } else {
+      return '<a href=/' + user + '/labels/' + encodeURIComponent(labelName) + ' class=pillbox>' + labelName + '</a>';
+    }
   }).join(' ');
   newLabel.placeholder = 'Label Name';
   newLabel.type = 'text';
@@ -292,8 +256,12 @@ function updateState() {
     history.replaceState({id: current.id}, '', 'https://feedreader.co' + pathname + current.id);
     if (token) {
       console.log('Marking '+ hash + ' as read');
-      api('POST', user + '/labels/read', function() {
-        console.log('Marked ' + hash + ' as read');
+      api('POST', user + '/labels/read', function(response) {
+        if (response.success) {
+          console.log('Marked ' + hash + ' as read');
+        } else {
+          console.log('Couldn\'nt mark ' + hash + ' as read');
+        }
       }, 'hash=' + hash);
     }
   }

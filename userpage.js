@@ -5,13 +5,13 @@ var unread = document.getElementById('unread');
 var user = window.location.pathname.split('/')[1];
 
 function get_labels() {
-  api('GET', user + '/labels', function() {
+  api('GET', user + '/labels', function(response) {
     var div = document.getElementById('labels');
-    if ((labels = JSON.parse(this.responseText).labels)) {
-      if (!labels.length) {
+    if (response.labels) {
+      if (!response.labels.length) {
         div.innerHTML = "No labels.";
       } else {
-        div.innerHTML = labels.map(function(label) {
+        div.innerHTML = response.labels.map(function(label) {
           return "<a href=/" + user + "/labels/" + encodeURIComponent(label) + " class=pillbox>" + label + "</a>";
         }).join(' ');
       }
@@ -22,13 +22,13 @@ function get_labels() {
 }
 
 function get_folders() {
-  api('GET', user + '/folders', function() {
+  api('GET', user + '/folders', function(response) {
     var div = document.getElementById('folders');
-    if ((folders = JSON.parse(this.responseText).folders)) {
-      if (!folders.length) {
+    if (response.folders) {
+      if (!response.folders.length) {
         div.innerHTML = "No folders.";
       } else {
-        div.innerHTML = folders.map(function(folder) {
+        div.innerHTML = response.folders.map(function(folder) {
           return "<a href=/" + user + "/folders/" + encodeURIComponent(folder) + " class=pillbox>" + folder + "</a>";
         }).join(' ');
       }
@@ -39,13 +39,13 @@ function get_folders() {
 }
 
 function get_feeds() {
-  api('GET', user + '/feeds', function() {
+  api('GET', user + '/feeds', function(response) {
     var ul = document.getElementById('feeds');
-    if ((feeds = JSON.parse(this.responseText).feeds)) {
-      if (!feeds.length) {
+    if (response.feeds) {
+      if (!response.feeds.length) {
         ul.innerHTML = "No feeds.";
       } else {
-        ul.innerHTML = feeds.map(function(feed) {
+        ul.innerHTML = response.feeds.map(function(feed) {
           return "<li><a href=/feeds/" + encodeURIComponent(feed.key) + ">" + feed.title + "</a></li>";
         }).join(' ');
       }

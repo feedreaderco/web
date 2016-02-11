@@ -6,10 +6,10 @@ var login = document.getElementById('login');
 
 function get_token() {
   user = form.elements["user"].value;
-  api('POST', user + '/tokens', function() {
-    if ((hash = JSON.parse(this.responseText).token)) {
+  api('POST', user + '/tokens', function(response) {
+    if (response.token) {
       form.style.display = 'none';
-      localStorage.token = hash;
+      localStorage.token = response.token;
       localStorage.user = user;
       window.location.pathname = user;
     } else {

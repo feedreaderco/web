@@ -11,7 +11,7 @@ function parseResponseText(responseText) {
   }
 }
 
-function api(method, endpoint, onload, params) {
+function api(method, endpoint, callback, params) {
   var xhr = new XMLHttpRequest();
   var urlparams = '';
   var token = localStorage.token;

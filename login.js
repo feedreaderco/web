@@ -1,6 +1,5 @@
 import api from './api';
 
-var token = '';
 var user = '';
 var form = document.getElementById('loginForm');
 var login = document.getElementById('login');

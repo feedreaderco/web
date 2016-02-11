@@ -47,3 +47,7 @@ var h2 = document.getElementById('user')
 }
 h2.innerHTML = user
 document.title = user + ' (feedreader.co)'
+unread.href = "/" + user + "/feeds"
+get_labels()
+get_folders()
+get_feeds()

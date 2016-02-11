@@ -4,7 +4,8 @@ var webpack = require('webpack');
 module.exports = {
   entry: {
     main: './main.js',
-    userpage: './userpage.js'
+    userpage: './userpage.js',
+    login: './login.js'
   },
   output: {
     path: path.join(__dirname, 'static'),

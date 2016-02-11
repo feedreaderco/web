@@ -1,3 +1,5 @@
+import api from './api';
+
 var current;
 var articles;
 var labelNames = [];
@@ -9,27 +11,9 @@ var pathname = pathname_split.join('/');
 var user = localStorage.user;
 var viewedFeed = '';
 
-var base64_encode = function(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
-};
-
-var api = function(method, endpoint, onload, params) {
-  var xhr = new XMLHttpRequest();
-  var urlparams = '';
-  if ((params) && (method === 'GET')) urlparams = '?' + params;
-  xhr.open(method, 'https://api.feedreader.co/v1' + endpoint + urlparams);
-  if (method != 'GET') xhr.setRequestHeader('authorization', 'Basic ' + base64_encode(token + ':'));
-  xhr.onload = onload;
-  if (params) {
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send(params);
-  }
-  else xhr.send();
-};
-
 var add_to_folder = function(folderButton) {
   var folderName = folderButton.value;
-  api('POST', '/' + user + '/folders/' + encodeURIComponent(folderName), function() {
+  api('POST', user + '/folders/' + encodeURIComponent(folderName), function() {
     try {
       var p = JSON.parse(this.responseText);
       var success = p.success;
@@ -42,7 +26,7 @@ var add_to_folder = function(folderButton) {
 
 var remove_from_folder = function(folderButton) {
   var folderName = folderButton.value;
-  api('DELETE', '/' + user + '/folders/' + encodeURIComponent(folderName), function() {
+  api('DELETE', user + '/folders/' + encodeURIComponent(folderName), function() {
     try {
       var p = JSON.parse(this.responseText);
       var success = p.success;
@@ -78,7 +62,7 @@ var get_folders = function(callback) {
   var foldersDiv = document.getElementById('folders');
   if (pathname_split[1] === 'feeds') {
     viewedFeed = pathname.slice(7, -1);
-    api('GET', '/' + user + '/folders', function() {
+    api('GET', user + '/folders', function() {
       var parsedJSON = JSON.parse(this.responseText);
       if ((parsedJSON.allFolders) && (parsedJSON.allFolders.length)) {
         parsedJSON.allFolders.forEach(function(folderName, position) {
@@ -111,7 +95,7 @@ var get_folders = function(callback) {
       callback();
     }, 'xmlurl=' + viewedFeed);
   } else {
-    api('GET', '/' + user + '/folders', function() {
+    api('GET', user + '/folders', function() {
       try {
         var p = JSON.parse(this.responseText);
         var folders = p.folders;
@@ -137,7 +121,7 @@ var add_label = function(newLabel) {
   newLabelLink.innerHTML = value;
   newLabel.parentElement.insertBefore(newLabelLink, newLabel);
   newLabel.style.display = 'none';
-  api('POST', '/' + user + '/labels/' + encodeURIComponent(value), function() {
+  api('POST', user + '/labels/' + encodeURIComponent(value), function() {
     try {
       var p = JSON.parse(this.responseText);
       var success = p.success;
@@ -149,7 +133,7 @@ var add_label = function(newLabel) {
 };
 
 var get_labels = function(callback) {
-  api('GET', '/' + user + '/labels', function() {
+  api('GET', user + '/labels', function() {
     try {
       var p = JSON.parse(this.responseText);
       var labels = p.labels;
@@ -159,7 +143,7 @@ var get_labels = function(callback) {
     if (labels.length) {
       labelNames = labels;
       labels.forEach(function(feedLabel) {
-        api('GET', '/' + user + '/labels/' + feedLabel, function() {
+        api('GET', user + '/labels/' + feedLabel, function() {
           labelArticles[feedLabel] = [];
           try {
             var p = JSON.parse(this.responseText);
@@ -176,7 +160,7 @@ var get_labels = function(callback) {
 };
 
 var get_articles = function(callback) {
-  var pathname_stripped = pathname.slice(0, -1);
+  var pathname_stripped = pathname.slice(1, -1);
   api('GET', pathname_stripped, function() {
     try {
       var p = JSON.parse(this.responseText);
@@ -208,7 +192,7 @@ var get_articles = function(callback) {
 };
 
 var refresh_feeds = function() {
-  if (token) api('GET', '/' + user + '/feeds', function() {
+  if (token) api('GET', user + '/feeds', function() {
     try {
       var p = JSON.parse(this.responseText);
       var feeds = p.feeds;
@@ -216,7 +200,7 @@ var refresh_feeds = function() {
       var feeds = null;
     }
     if (feeds) feeds.forEach(function(feed) {
-      api('GET', '/feeds/' + feed.key, function() {
+      api('GET', 'feeds/' + feed.key, function() {
         try {
           var p = JSON.parse(this.responseText);
           var all_articles = p.articles;
@@ -230,7 +214,7 @@ var refresh_feeds = function() {
 };
 
 var get_article = function(hash, callback) {
-  if (!!hash) api('GET', '/articles/' + hash, function() {
+  if (!!hash) api('GET', 'articles/' + hash, function() {
     try {
       article = JSON.parse(this.responseText).article;
       if (!document.getElementById(hash)) display_article(article, callback);
@@ -308,7 +292,7 @@ var updateState = function() {
     history.replaceState({id: current.id}, '', 'https://feedreader.co' + pathname + current.id);
     if (token) {
       console.log('Marking '+ hash + ' as read');
-      api('POST', '/' + user + '/labels/read', function() {
+      api('POST', user + '/labels/read', function() {
         console.log('Marked ' + hash + ' as read');
       }, 'hash=' + hash);
     }

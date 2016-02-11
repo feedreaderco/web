@@ -1,26 +1,8 @@
+import api from './api';
+
 var h2 = document.getElementById('user');
 var unread = document.getElementById('unread');
 var user = window.location.pathname.split('/')[1];
-
-function base64_encode(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
-}
-
-function api(method, endpoint, onload, params) {
-  var xhr = new XMLHttpRequest();
-  xhr.open(method, 'https://api.feedreader.co/v1/' + endpoint);
-  if (method!='GET') {
-    xhr.setRequestHeader('authorization', 'Basic ' + base64_encode(localStorage.token + ':'));
-  }
-  xhr.onload = onload;
-  if (params) {
-    if (typeof params === 'string') {
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    }
-    xhr.send(params);
-  }
-  else xhr.send();
-}
 
 function get_labels() {
   api('GET', user + '/labels', function() {

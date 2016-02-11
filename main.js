@@ -11,7 +11,7 @@ var pathname = pathname_split.join('/');
 var user = localStorage.user;
 var viewedFeed = '';
 
-var add_to_folder = function(folderButton) {
+function add_to_folder(folderButton) {
   var folderName = folderButton.value;
   api('POST', user + '/folders/' + encodeURIComponent(folderName), function() {
     try {
@@ -22,9 +22,9 @@ var add_to_folder = function(folderButton) {
     }
     if (success) folderButton.className = 'pillbox';
   }, 'xmlurl=' + viewedFeed);
-};
+}
 
-var remove_from_folder = function(folderButton) {
+function remove_from_folder(folderButton) {
   var folderName = folderButton.value;
   api('DELETE', user + '/folders/' + encodeURIComponent(folderName), function() {
     try {
@@ -35,9 +35,9 @@ var remove_from_folder = function(folderButton) {
     }
     if (success) folderButton.className = 'pillbox empty'; 
   }, 'xmlurl=' + viewedFeed);
-};
+}
 
-var create_folder_button = function(folderName) {
+function create_folder_button(folderName) {
   var folderButton = document.createElement('input');
   folderButton.type = 'submit';
   folderButton.className = 'pillbox empty';
@@ -48,17 +48,17 @@ var create_folder_button = function(folderName) {
     return false;
   };
   return folderButton;
-};
+}
 
-var add_to_new_folder = function(newFolder) {
+function add_to_new_folder(newFolder) {
   var newButton = create_folder_button(newFolder.value);
   newFolder.value = '';
   newFolder.parentElement.insertBefore(newButton, newFolder);
   newFolder.style.display = 'none';
   add_to_folder(newButton);
-};
+}
 
-var get_folders = function(callback) {
+function get_folders(callback) {
   var foldersDiv = document.getElementById('folders');
   if (pathname_split[1] === 'feeds') {
     viewedFeed = pathname.slice(7, -1);
@@ -110,9 +110,9 @@ var get_folders = function(callback) {
       callback();
     });
   }
-};
+}
 
-var add_label = function(newLabel) {
+function add_label(newLabel) {
   var value = newLabel.value;
   var newLabelLink = document.createElement('a');
   newLabel.value = '';
@@ -130,9 +130,9 @@ var add_label = function(newLabel) {
     }
     if (success) newLabelLink.className = 'pillbox'; 
   }, 'hash=' + newLabel.parentElement.id);
-};
+}
 
-var get_labels = function(callback) {
+function get_labels(callback) {
   api('GET', user + '/labels', function() {
     try {
       var p = JSON.parse(this.responseText);
@@ -157,9 +157,9 @@ var get_labels = function(callback) {
     }
     callback();
   });
-};
+}
 
-var get_articles = function(callback) {
+function get_articles(callback) {
   var pathname_stripped = pathname.slice(1, -1);
   api('GET', pathname_stripped, function() {
     try {
@@ -189,9 +189,9 @@ var get_articles = function(callback) {
       else callback();
     }
   });
-};
+}
 
-var refresh_feeds = function() {
+function refresh_feeds() {
   if (token) api('GET', user + '/feeds', function() {
     try {
       var p = JSON.parse(this.responseText);
@@ -211,9 +211,9 @@ var refresh_feeds = function() {
       });
     });
   });
-};
+}
 
-var get_article = function(hash, callback) {
+function get_article(hash, callback) {
   if (!!hash) api('GET', 'articles/' + hash, function() {
     try {
       article = JSON.parse(this.responseText).article;
@@ -226,9 +226,9 @@ var get_article = function(hash, callback) {
     }
   });
   else callback();
-};
+}
 
-var display_article = function(article, callback) {
+function display_article(article, callback) {
   var element = document.createElement('div');
   var title = document.createElement('h1');
   var meta_title = document.createElement('h2');
@@ -279,9 +279,9 @@ var display_article = function(article, callback) {
   var e = document.getElementById('articles').appendChild(element);
   if (!current) current = e;
   callback();
-};
+}
 
-var updateState = function() {
+function updateState() {
   if ((current.nextSibling.offsetTop < window.pageYOffset) || (current.offsetTop > window.pageYOffset)) {
     var hash = current.id;
     var i = articles.indexOf(hash);
@@ -297,7 +297,7 @@ var updateState = function() {
       }, 'hash=' + hash);
     }
   }
-};
+}
 
 pathname = pathname + '/';
 

@@ -2,14 +2,11 @@ var current;
 var articles;
 var labelNames = [];
 var labelArticles = {};
-var folderNames = [];
-var folderFeedKeys = {};
 var token = localStorage.token;
 var pathname_split = window.location.pathname.split('/');
 var hash = pathname_split.pop();
 var pathname = pathname_split.join('/');
 var user = localStorage.user;
-var viewedUser = pathname_split[1];
 var viewedFeed = '';
 
 var base64_encode = function(str) {

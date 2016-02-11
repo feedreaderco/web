@@ -1,5 +1,4 @@
-var current
-, token = ''
+var token = ''
 , user = ''
 , form = document.getElementById('loginForm')
 , login = document.getElementById('login')
@@ -31,7 +30,6 @@ var current
   return false
 }
 login.onclick = get_token
-window.onscroll = mark_as_read
 window.onbeforeunload = function() {
   api('DELETE')
 }

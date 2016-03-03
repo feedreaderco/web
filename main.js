@@ -57,7 +57,7 @@ function get_folders(callback) {
     api('GET', user + '/folders', function(response) {
       if (response.allFolders && response.folders) {
         response.allFolders.forEach(function(folderName, position) {
-          folderButton = create_folder_button(folderName);
+          var folderButton = create_folder_button(folderName);
           if (response.folders.indexOf(folderName) != -1) folderButton.className = 'pillbox';
           foldersDiv.appendChild(folderButton);
         });

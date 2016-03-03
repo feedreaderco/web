@@ -6,6 +6,10 @@ var port = process.env.PORT || 8000;
 
 app.use(express.static('static'));
 
+app.get('/bookmarklet/js', function(req, res) {
+  res.redirect(301, '/bookmarklet.js');
+});
+
 app.get('/:user/labels/:label*', function(req,res) {
   res.sendFile(path.join(__dirname, 'static/label.html'));
 });

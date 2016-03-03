@@ -6,7 +6,8 @@ module.exports = {
     main: './main.js',
     userpage: './userpage.js',
     login: './login.js',
-    signup: './signup.js'
+    signup: './signup.js',
+    bookmarklet: './bookmarklet.js'
   },
   output: {
     path: path.join(__dirname, 'static'),

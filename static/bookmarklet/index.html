@@ -22,7 +22,7 @@ var h1 = document.getElementById('h2')
   var bookmarklet = document.createElement('a')
   , code = document.getElementById('bookmarklet')
   bookmarklet.innerHTML = "View in Feed Reader"
-  bookmarklet.href = "javascript:var s=document.createElement('script');s.src='https://feedreader.co/bookmarklet/js';document.body.appendChild(s);"
+  bookmarklet.href = "javascript:var s=document.createElement('script');s.src='https://feedreader.co/bookmarklet.js';document.body.appendChild(s);"
   code.innerHTML = bookmarklet.href
   document.body.insertBefore(bookmarklet,h1.nextSibling)
 }

@@ -7,7 +7,7 @@ function parseResponseText(responseText) {
     var parsedResponse = JSON.parse(responseText);
     return parsedResponse;
   } catch(e) {
-    return {};
+    return {error: e};
   }
 }
 

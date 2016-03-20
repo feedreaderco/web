@@ -180,7 +180,7 @@ function get_article(hash, callback) {
           callback();
         }
       } else {
-        console.error('Could not parse articles/' + hash, e.message);
+        console.error('Could not parse articles/' + hash, response.error);
         callback();
       }
     });

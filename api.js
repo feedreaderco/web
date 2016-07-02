@@ -1,6 +1,6 @@
 'use strict'
 
-const API_BASE_URL = 'http://feedreader2016-923846828.us-east-1.elb.amazonaws.com';
+const API_BASE_URL = 'https://9m5yi5dxhc.execute-api.us-east-1.amazonaws.com';
 const API_URL = API_BASE_URL + '/v1';
 
 function base64_encode(str) {

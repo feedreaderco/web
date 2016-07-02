@@ -1,3 +1,8 @@
+'use strict'
+
+const API_BASE_URL = 'https://feedreader2016-923846828.us-east-1.elb.amazonaws.com';
+const API_URL = API_BASE_URL + '/v1';
+
 function base64_encode(str) {
   return window.btoa(unescape(encodeURIComponent(str)));
 }
@@ -18,7 +23,7 @@ function api(method, endpoint, callback, params) {
   if ((params) && (method === 'GET')) {
     urlparams = '?' + params;
   }
-  xhr.open(method, 'https://api.feedreader.co/v1/' + endpoint + urlparams);
+  xhr.open(method, API_URL + '/' + endpoint + urlparams);
   if (method != 'GET') {
     xhr.setRequestHeader('authorization', 'Basic ' + base64_encode(token + ':'));
   }

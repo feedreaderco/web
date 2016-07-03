@@ -20,6 +20,15 @@ function api(method, endpoint, callback, params) {
   var xhr = new XMLHttpRequest();
   var urlparams = '';
   var token = localStorage.token;
+  if (endpoint.substring(0, 5) === "feeds") {
+    // endpoint looks like 'feeds/http://daringfireball.net/feeds/main'
+    // beginning is 'feeds/'
+    // rest is 'http://daringfireball.net/feeds/main'
+    // endpoint is changed to 'feeds/http%3A%2F%2Fdaringfireball.net%2Ffeeds%2Fmain'
+    var beginning = endpoint.substring(0, 6);
+    var rest = endpoint.substring(6);
+    endpoint = beginning + encodeURIComponent(rest);
+  }
   if ((params) && (method === 'GET')) {
     urlparams = '?' + params;
   }

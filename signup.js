@@ -13,7 +13,7 @@ function signup() {
       console.log(response);
       alert('Something went wrong - please contact us');
     }
-  }, "username=" + user + "&password=" + form.elements["password"].value);
+  }, "user=" + user + "&password=" + form.elements["password"].value);
   return false;
 }
 

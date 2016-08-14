@@ -11,7 +11,7 @@ function signup() {
     if (response.token) {
       form.style.display = 'none';
       localStorage.token = response.token;
-      window.location.pathname = 'https://feedreader.co/welcome/';
+      window.location.href = 'https://feedreader.co/welcome/';
     } else {
       console.log(response);
       alert('Something went wrong - please contact me at arpith@feedreader.co');

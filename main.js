@@ -10,6 +10,7 @@ var hash = pathname_split.pop();
 var pathname = pathname_split.join('/');
 var user = localStorage.user;
 var viewedFeed = '';
+var userLink = document.getElementById('user');
 
 function add_to_folder(folderButton) {
   var folderName = folderButton.value;
@@ -278,6 +279,8 @@ window.onscroll = updateState;
 window.onbeforeunload = function() {
   api('DELETE');
 };
+
+if (user) userLink.innerHTML = user;
 
 get_articles(function() {
   get_folders(function() {

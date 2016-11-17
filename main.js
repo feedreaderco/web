@@ -10,7 +10,8 @@ var hash = pathname_split.pop();
 var pathname = pathname_split.join('/');
 var user = localStorage.user;
 var viewedFeed = '';
-var userLink = document.getElementById('user');
+var userLink = document.getElementById('userLink');
+var userH2 = document.getElementById('user');
 
 function add_to_folder(folderButton) {
   var folderName = folderButton.value;
@@ -280,7 +281,13 @@ window.onbeforeunload = function() {
   api('DELETE');
 };
 
-if (user) userLink.innerHTML = user;
+if (user) {
+  userLink.href = '/' + user;
+  userH2.innerHTML = user;
+} else {
+  userLink.href = '/login';
+  userH2.innerHTML = 'Login';
+}
 
 get_articles(function() {
   get_folders(function() {

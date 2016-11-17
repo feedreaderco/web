@@ -65,8 +65,9 @@ a {
   display: block;
 }
 #user {
+  margin-top: 0.4em!important;
   float: right;
-  clear: right;
+  line-height: 1.6em!important;
 }
 .article {
   margin-bottom: 1.6em!important;

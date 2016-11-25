@@ -60,14 +60,19 @@ a {
   border-bottom: thin solid!important;
   border-bottom-color: #157DEC!important;
 }
+#top h1 {
+  margin-top: 0!important;
+}
 #logo {
   float: left;
   display: block;
 }
 #user {
-  margin-top: 0.4em!important;
   float: right;
   line-height: 1.6em!important;
+}
+#top {
+  margin-top: 0.4em!important;
 }
 .article {
   margin-bottom: 1.6em!important;

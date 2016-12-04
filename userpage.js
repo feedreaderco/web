@@ -57,7 +57,7 @@ function get_feeds() {
 
 h2.innerHTML = user;
 document.title = user + ' (feedreader.co)';
-unread.href = "/" + user + "/feeds";
+read.href = "/" + user + "/labels/read";
 
 get_labels();
 get_folders();

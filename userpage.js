@@ -1,7 +1,7 @@
 import api from './api';
 
 var h2 = document.getElementById('user');
-var unread = document.getElementById('unread');
+var read = document.getElementById('read');
 var user = window.location.pathname.split('/')[1];
 
 function get_labels() {

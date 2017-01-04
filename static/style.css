@@ -2,15 +2,18 @@
   body { font-size: 19px!important; }
   h1 { font-size: 24px!important; }
   embed, iframe, object { max-height: 10em!important; }
+  header { position: absolute; }
 }
 @media all and (min-device-width:768px) {
   body { font-size: 19px!important; }
   h1 { font-size: 26px!important; }
   embed, iframe, object { max-height: 20em!important; }
+  header { position: fixed; }
 }
 @media all and (min-device-width:1024px) {
   body { font-size:21px!important; }
   h1 { font-size: 28px!important; }
+  header { position: fixed; }
 }
 embed, iframe, object, img, p, div, table, tbody, big, h1, h3 {
   max-width: 100%!important;
@@ -65,7 +68,6 @@ header {
   max-width: 88%;
   padding-top: 0.8em;
   padding-bottom: 0.4em;
-  position: fixed;
   top: 0;
   background: #FEFCFF;
 }

@@ -71,12 +71,18 @@ header {
   top: 0;
   background: #FEFCFF;
 }
-#top h1 {
+#logo img {
+  height: 1em!important;
+}
+#logo h1 {
+  display: inline;
+  margin-left: 0.3em!important;
   margin-top: 0!important;
 }
 #logo {
   float: left;
   display: block;
+  border: none!important;
 }
 #user {
   float: right;

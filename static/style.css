@@ -65,6 +65,7 @@ header {
   padding-top: 0.8em;
   padding-bottom: 0.4em;
   position: fixed;
+  top: 0;
   background: #FEFCFF;
 }
 #top h1 {

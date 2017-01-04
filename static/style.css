@@ -19,6 +19,7 @@ embed, iframe, object, img, p, div, table, tbody, big, h1, h3 {
 body {
   width: 36em!important;
   max-width: 88%!important;
+  padding-top: 0;
   margin: auto!important;
   line-height: 1.6em!important;
   font-family: 'Helvetica Neue', helvetica, sans!important;
@@ -79,6 +80,9 @@ header {
 }
 #top {
   margin-top: 0.4em!important;
+}
+#articles {
+  margin-top: 5em;
 }
 .article {
   margin-bottom: 1.6em!important;

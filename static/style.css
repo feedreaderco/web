@@ -19,7 +19,6 @@ embed, iframe, object, img, p, div, table, tbody, big, h1, h3 {
 body {
   width: 36em!important;
   max-width: 88%!important;
-  padding-top: 0.8em!important;
   margin: auto!important;
   line-height: 1.6em!important;
   font-family: 'Helvetica Neue', helvetica, sans!important;
@@ -59,6 +58,13 @@ a {
   color: #157DEC!important;
   border-bottom: thin solid!important;
   border-bottom-color: #157DEC!important;
+}
+header {
+  width: 100%;
+  padding-top: 0.8em;
+  padding-bottom: 0.4em;
+  position: fixed;
+  background: #FEFCFF;
 }
 #top h1 {
   margin-top: 0!important;

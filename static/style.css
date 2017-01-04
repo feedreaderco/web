@@ -61,7 +61,8 @@ a {
   border-bottom-color: #157DEC!important;
 }
 header {
-  width: 100%;
+  width: 36em;
+  max-width: 88%;
   padding-top: 0.8em;
   padding-bottom: 0.4em;
   position: fixed;

@@ -3,11 +3,11 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    main: './main.js',
-    userpage: './userpage.js',
-    login: './login.js',
-    signup: './signup.js',
-    bookmarklet: './bookmarklet.js'
+    main: './src/main.js',
+    userpage: './src/userpage.js',
+    login: './src/login.js',
+    signup: './src/signup.js',
+    bookmarklet: './src/bookmarklet.js'
   },
   output: {
     path: path.join(__dirname, 'static'),

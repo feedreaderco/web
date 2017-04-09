@@ -7,6 +7,7 @@ var labelArticles = {};
 var token = localStorage.token;
 var pathname_split = window.location.pathname.split('/');
 var hash = pathname_split.pop();
+var isArticle = pathname_split[pathname_split.length - 1] === 'articles';
 var pathname = pathname_split.join('/');
 var user = localStorage.user;
 var viewedFeed = '';
@@ -134,6 +135,7 @@ function get_labels(callback) {
 
 function get_articles(callback) {
   var pathname_stripped = pathname.slice(1, -1);
+
   api('GET', pathname_stripped, function(response) {
     if (response.articles) {
       var i = 0;
@@ -289,8 +291,16 @@ if (user) {
   userH2.innerHTML = 'Login';
 }
 
-get_articles(function() {
-  get_folders(function() {
-    get_labels(refresh_feeds);
+if (hash && isArticle) {
+  get_article(hash, function() {
+    get_folders(function() {
+      get_labels(refresh_feeds);
+    });
   });
-});
+} else {
+  get_articles(function() {
+    get_folders(function() {
+      get_labels(refresh_feeds);
+    });
+  });
+}

@@ -7,16 +7,24 @@ module.exports = {
     userpage: './src/userpage.js',
     login: './src/login.js',
     signup: './src/signup.js',
-    bookmarklet: './src/bookmarklet.js'
+    bookmarklet: './src/bookmarklet.js',
+    article: './src/article.js'
   },
   output: {
     path: path.join(__dirname, 'static'),
     filename: '[name].js'
   },
   module: {
-    loaders: [{
-      exclude: /node_modules/,
-      loader: 'babel-loader'
-    }]
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+    ]
   }
 };

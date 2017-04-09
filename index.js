@@ -10,6 +10,10 @@ app.get('/articles/:articleID', function(req, res) {
   res.sendFile(path.join(__dirname, 'static/label.html'));
 });
 
+app.get('/articles/:articleID/body', function(req, res) {
+  res.sendFile(path.join(__dirname, 'static/article.html'));
+});
+
 app.get('/bookmarklet/js', function(req, res) {
   res.redirect(301, '/bookmarklet.js');
 });

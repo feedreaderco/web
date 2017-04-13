@@ -11,10 +11,6 @@ const port = process.env.PORT || 8000;
 app.use(express.static('static'));
 app.set('view engine', 'ejs');
 
-app.get('/articles/:articleID', function(req, res) {
-  res.sendFile(path.join(__dirname, 'static/label.html'));
-});
-
 app.get('/articles/:id/body', function(req, res) {
   api().articles.get(req.params.id).then(({ article }) => {
     const reactString = renderToString(<ArticleBody article={article} />);
@@ -22,28 +18,32 @@ app.get('/articles/:id/body', function(req, res) {
   });
 });
 
+app.get('/articles/:articleID', function(req, res) {
+  res.sendFile(path.join(__dirname, '../static/label.html'));
+});
+
 app.get('/bookmarklet/js', function(req, res) {
-  res.redirect(301, '/bookmarklet.js');
+  res.redirect(301, '../bookmarklet.js');
 });
 
 app.get('/:user/labels/:label*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'static/label.html'));
+  res.sendFile(path.join(__dirname, '../static/label.html'));
 });
 
 app.get('/:user/folders/:folder*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'static/label.html'));
+  res.sendFile(path.join(__dirname, '../static/label.html'));
 });
 
 app.get('/:user/feeds*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'static/label.html'));
+  res.sendFile(path.join(__dirname, '../static/label.html'));
 });
 
 app.get('/feeds/*', function(req,res) {
-  res.sendFile(path.join(__dirname, 'static/label.html'));
+  res.sendFile(path.join(__dirname, '../static/label.html'));
 });
 
 app.get('/:user', function(req,res) {
-  res.sendFile(path.join(__dirname, 'static/user.html'));
+  res.sendFile(path.join(__dirname, '../static/user.html'));
 });
 
 app.listen(port);

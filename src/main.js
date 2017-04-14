@@ -1,71 +1,73 @@
 import api from './api';
 
-var current;
-var articles;
-var labelNames = [];
-var labelArticles = {};
-var token = localStorage.token;
-var pathname_split = window.location.pathname.split('/');
-var hash = pathname_split.pop();
-var isArticle = pathname_split[pathname_split.length - 1] === 'articles';
-var pathname = pathname_split.join('/');
-var user = localStorage.user;
-var viewedFeed = '';
-var userLink = document.getElementById('userLink');
-var userH2 = document.getElementById('user');
+const token = localStorage.token;
+const user = localStorage.user;
+const lib = api(user, token);
+const userLink = document.getElementById('userLink');
+const userH2 = document.getElementById('user');
+const splitPathname = window.location.pathname.split('/');
+const isArticle = splitPathname[splitPathname.length - 1] === 'articles';
+const labelArticles = {};
+let hash = splitPathname.pop();
+let pathname = splitPathname.join('/');
+let labelNames = [];
+let viewedFeed = '';
+let current;
+let articles;
 
-function add_to_folder(folderButton) {
-  var folderName = folderButton.value;
-  api('POST', user + '/folders/' + encodeURIComponent(folderName), function(response) {
-    if (response.success) {
-      folderButton.className = 'pillbox';
-    }
-  }, 'xmlurl=' + viewedFeed);
+function addToFolder(folderButton) {
+  const folderName = folderButton.value;
+  lib.user.folders.folder.post(folderName, viewedFeed).then(() => {
+    folderButton.className = 'pillbox';
+  }).catch(console.error);
 }
 
-function remove_from_folder(folderButton) {
-  var folderName = folderButton.value;
-  api('DELETE', user + '/folders/' + encodeURIComponent(folderName), function(response) {
-    if (response.success) {
-      folderButton.className = 'pillbox empty';
-    }
-  }, 'xmlurl=' + viewedFeed);
+function removeFromFolder(folderButton) {
+  const folderName = folderButton.value;
+  lib.user.folders.folder.del(folderName, viewedFeed).then(() => {
+    folderButton.className = 'pillbox empty';
+  }).catch(console.error);
 }
 
-function create_folder_button(folderName) {
-  var folderButton = document.createElement('input');
+function createFolderButton(folderName) {
+  const folderButton = document.createElement('input');
   folderButton.type = 'submit';
   folderButton.className = 'pillbox empty';
   folderButton.value = folderName;
-  folderButton.onclick = function() {
-    if (folderButton.className === 'pillbox') remove_from_folder(folderButton);
-    else add_to_folder(folderButton);
+  folderButton.onclick = () => {
+    if (folderButton.className === 'pillbox') {
+      removeFromFolder(folderButton);
+    } else {
+      addToFolder(folderButton);
+    }
     return false;
   };
   return folderButton;
 }
 
-function add_to_new_folder(newFolder) {
-  var newButton = create_folder_button(newFolder.value);
+function addToNewFolder(newFolder) {
+  const newButton = createFolderButton(newFolder.value);
   newFolder.value = '';
   newFolder.parentElement.insertBefore(newButton, newFolder);
   newFolder.style.display = 'none';
-  add_to_folder(newButton);
+  addToFolder(newButton);
 }
 
-function get_folders(callback) {
-  var foldersDiv = document.getElementById('folders');
-  if (pathname_split[1] === 'feeds') {
+function getFolders(callback) {
+  const foldersDiv = document.getElementById('folders');
+  if (splitPathname[1] === 'feeds') {
     viewedFeed = pathname.slice(7, -1);
-    api('GET', user + '/folders', function(response) {
+    return lib.user.folders.get().then((response) => {
       if (response.allFolders && response.folders) {
-        response.allFolders.forEach(function(folderName, position) {
-          var folderButton = create_folder_button(folderName);
-          if (response.folders.indexOf(folderName) != -1) folderButton.className = 'pillbox';
+        response.allFolders.forEach((folderName, position) => {
+          const folderButton = createFolderButton(folderName);
+          if (response.folders.indexOf(folderName) !== -1) {
+            folderButton.className = 'pillbox';
+          }
           foldersDiv.appendChild(folderButton);
         });
-        var addFolder = document.createElement('input');
-        var newFolder = document.createElement('input');
+        const addFolder = document.createElement('input');
+        const newFolder = document.createElement('input');
         newFolder.placeholder = 'Folder Name';
         newFolder.type = 'text';
         newFolder.style.display = 'none';
@@ -73,12 +75,12 @@ function get_folders(callback) {
         addFolder.className = 'pillbox';
         addFolder.value = 'New Folder';
         addFolder.type = 'submit';
-        addFolder.onclick = function() {
+        addFolder.onclick = () => {
           if (newFolder.style.display === 'none') {
             newFolder.style.display = 'inline';
             addFolder.value = 'Save';
           } else {
-            add_to_new_folder(newFolder);
+            addToNewFolder(newFolder);
             addFolder.value = 'New Folder';
           }
           return false;
@@ -86,42 +88,39 @@ function get_folders(callback) {
         foldersDiv.appendChild(newFolder);
         foldersDiv.appendChild(addFolder);
       }
-      callback();
-    }, 'xmlurl=' + viewedFeed);
+    }).catch(console.error);
   } else {
-    api('GET', user + '/folders', function(response) {
+    return lib.user.folders.get().then((response) => {
       if (response.folders) {
-        foldersDiv.innerHTML = response.folders.map(function(folder) {
-          return '<a href=/' + user + '/folders/' + encodeURIComponent(folder) + ' class=pillbox>' + folder + '</a>';
+        foldersDiv.innerHTML = response.folders.map((folder) => {
+          return `<a href=/${user}/folders/${encodeURIComponent(folder)} class=pillbox>${folder}</a>`;
         }).join(' ');
       }
-      callback();
-    });
+    }).catch(console.error);
   }
 }
 
-function add_label(newLabel) {
-  var value = newLabel.value;
-  var newLabelLink = document.createElement('a');
+function addLabel(newLabel) {
+  const labelName = newLabel.value;
+  const articleID = newLabel.parentElement.id;
+  const newLabelLink = document.createElement('a');
   newLabel.value = '';
-  newLabelLink.href = '/' + user + '/labels/' + encodeURIComponent(value);
+  newLabelLink.href = `/${user}/labels/${encodeURIComponent(value)}`;
   newLabelLink.className = 'pillbox empty';
   newLabelLink.innerHTML = value;
   newLabel.parentElement.insertBefore(newLabelLink, newLabel);
   newLabel.style.display = 'none';
-  api('POST', user + '/labels/' + encodeURIComponent(value), function(response) {
-    if (response.success) {
-      newLabelLink.className = 'pillbox'; 
-    }
-  }, 'hash=' + newLabel.parentElement.id);
+  lib.user.labels.post(labelName, articleID).then(() => {
+    newLabelLink.className = 'pillbox'; 
+  }).catch(console.error);
 }
 
-function get_labels(callback) {
-  api('GET', user + '/labels', function(response) {
+function getLabels() {
+  return lib.user.labels.get().then((response) => {
     if (response.labels) {
       labelNames = response.labels;
-      response.labels.forEach(function(feedLabel) {
-        api('GET', user + '/labels/' + feedLabel, function(response) {
+      response.labels.forEach((labelName) => {
+        lib.user.labels.get(labelName).then((response) => {
           labelArticles[feedLabel] = [];
           if (response.articles) {
             labelArticles[feedLabel] = response.articles;
@@ -129,94 +128,78 @@ function get_labels(callback) {
         });
       });
     }
-    callback();
-  });
+  }).catch(console.error);
 }
 
-function get_articles(callback) {
-  var pathname_stripped = pathname.slice(1, -1);
-
-  api('GET', pathname_stripped, function(response) {
+function getArticles() {
+  const strippedPathname = pathname.slice(1, -1);
+  return lib.get(strippedPathname).then((response) => {
     if (response.articles) {
-      var i = 0;
+      let i = 0;
       articles = response.articles;
-      if (hash) i = articles.indexOf(hash);
-      if (i<0) i = 0;
-      if (articles[i]) get_article(articles[i], function() {
-        if (articles[i+1]) get_article(articles[i+1], function() {
-          if (articles[i+2]) get_article(articles[i+2], function() {
-            if (articles[i+3]) get_article(articles[i+3], function() {
-              if (articles[i+4]) get_article(articles[i+4], callback);
-              else callback();
-            });
-            else callback();
-          });
-          else callback();
-        });
-        else callback();
-      });
-      else callback();
-    }
-  });
-}
-
-function refresh_feeds() {
-  if (token) api('GET', user + '/feeds', function(response) {
-    if (response.feeds) {
-      response.feeds.forEach(function(feed) {
-        api('GET', 'feeds/' + feed.key, function(response) {
-          if (response.articles) {
-            console.log('Refreshed ' + feed.title + ', ' + response.articles.length + ' articles so far');
-          }
-        });
-      });
-    }
-  });
-}
-
-function get_article(hash, callback) {
-  if (!!hash) {
-    api('GET', 'articles/' + hash, function(response) {
-      if (response.article) {
-        if (!document.getElementById(hash)) {
-          display_article(response.article, callback);
-        } else {
-          callback();
-        }
-      } else {
-        console.error('Could not parse articles/' + hash, response.error);
-        callback();
+      if (hash) {
+        i = articles.indexOf(hash);
       }
-    });
-  } else {
-    callback();
-  }
+      if (i < 0) {
+        i = 0;
+      }
+      articles.slice(i, i+4).forEach(getArticle);
+    }
+  });
 }
 
-function display_article(article, callback) {
-  var element = document.createElement('div');
-  var title = document.createElement('h1');
-  var meta_title = document.createElement('h2');
-  var text = document.createElement('div');
-  var link = document.createElement('a');
-  var meta_link = document.createElement('a');
-  var labels = document.createElement('div');
-  var newLabel = document.createElement('input');
-  var addLabel = document.createElement('input');
+function refreshFeeds() {
+  if (!token) return;
+  lib.user.feeds.get().then((response) => {
+    if (!response.feeds) return;
+    const promiseArr = response.feeds.map(({ key, title }) => {
+      return lib.feeds.get(key).then(({articles}) => {
+        if (!articles) return;
+        console.log(`Refreshed ${title}, ${articles.length} articles so far`);
+      }).catch((err) => {
+        console.log(`Could not refresh ${title}: ${err}`);
+      });
+    }).catch(console.error);
+    Promise.all(promiseArr);
+  });
+}
+
+function getArticle(hash) {
+  if (!hash) return;
+  return lib.articles.get(hash).then(({ article, error }) => {
+    if (!article) {
+      console.error(`Could not parse articles/${hash}`, error);
+    }
+    if (!document.getElementById(hash)) {
+      displayArticle(article);
+    }
+  }).catch(console.error);
+}
+
+function displayArticle(article) {
+  const element = document.createElement('div');
+  const title = document.createElement('h1');
+  const metaTitle = document.createElement('h2');
+  const text = document.createElement('div');
+  const link = document.createElement('a');
+  const metaLink = document.createElement('a');
+  const labels = document.createElement('div');
+  const newLabel = document.createElement('input');
+  const addLabel = document.createElement('input');
   title.innerHTML = article.title;
-  meta_title.innerHTML = article.meta.title;
+  metaTitle.innerHTML = article.meta.title;
   link.href = article.link;
-  meta_link.href = 'https://feedreader.co/feeds/' + article.feedurl;
+  metaLink.href = `https://feedreader.co/feeds/${article.feedurl}`;
   link.appendChild(title);
-  meta_link.appendChild(meta_title);
+  metaLink.appendChild(metaTitle);
   text.innerHTML = article.description;
   labels.id = article.hash;
   labels.className = 'minor-margin-top';
-  labels.innerHTML = labelNames.map(function(labelName) {
+  labels.innerHTML = labelNames.map((labelName) => {
     if (labelArticles[labelName].indexOf(article.hash) === -1) {
       return '';
     } else {
-      return '<a href=/' + user + '/labels/' + encodeURIComponent(labelName) + ' class=pillbox>' + labelName + '</a>';
+    return `<a href=/${user}/labels/${encodeURIComponent(labelName)} class=pillbox>${labelName}</a>`;
     }
   }).join(' ');
   newLabel.placeholder = 'Label Name';
@@ -241,50 +224,47 @@ function display_article(article, callback) {
   element.className = 'article';
   element.id = article.hash;
   element.appendChild(link);
-  element.appendChild(meta_link);
+  element.appendChild(metaLink);
   element.appendChild(text);
   element.appendChild(labels);
-  var e = document.getElementById('articles').appendChild(element);
+  const e = document.getElementById('articles').appendChild(element);
   if (!current) current = e;
-  callback();
 }
 
 function updateState() {
   if ((current.nextSibling.offsetTop < window.pageYOffset) || (current.offsetTop > window.pageYOffset)) {
-    var hash = current.id;
-    var i = articles.indexOf(hash);
-    get_article(articles[i+5], function(){});
-    if (current.offsetTop > window.pageYOffset) current = current.previousSibling;
-    else current = current.nextSibling;
-    document.title = current.childNodes[0].firstChild.innerHTML + ' - ' + current.childNodes[1].firstChild.innerHTML + ' (feedreader.co)';
-    history.replaceState({id: current.id}, '', 'https://feedreader.co' + pathname + current.id);
+    const hash = current.id;
+    const i = articles.indexOf(hash);
+    getArticle(articles[i+5]);
+    if (current.offsetTop > window.pageYOffset) {
+      current = current.previousSibling;
+    } else {
+      current = current.nextSibling;
+    }
+    document.title = `${current.childNodes[0].firstChild.innerHTML} - ${current.childNodes[1].firstChild.innerHTML } (feedreader.co)`;
+    history.replaceState({ id: current.id }, '', `https://feedreader.co${pathname}${current.id}`);
     if (token) {
-      console.log('Marking '+ hash + ' as read');
-      api('POST', user + '/labels/read', function(response) {
-        if (response.success) {
-          console.log('Marked ' + hash + ' as read');
-        } else {
-          console.log('Couldn\'nt mark ' + hash + ' as read');
-        }
-      }, 'hash=' + hash);
+      console.log(`Marking ${hash} as read`);
+      api.user.labels.post('read', { hash }).then(() => {
+        console.log(`Marked ${hash} as read`);
+      }).catch(() => {
+        console.log(`Couldn't mark ${hash} as read`);
+      });
     }
   }
 }
 
-pathname = pathname + '/';
+pathname = `${pathname}/`;
 
 if ((hash.length != 32) && (hash.length != 40)) {
-  pathname = pathname + hash + '/';
+  pathname = `${pathname}${hash}/`;
   hash = '';
 }
 
 window.onscroll = updateState;
-window.onbeforeunload = function() {
-  api('DELETE');
-};
 
 if (user) {
-  userLink.href = '/' + user;
+  userLink.href = `/${user}`;
   userH2.innerHTML = user;
 } else {
   userLink.href = '/login';
@@ -292,15 +272,7 @@ if (user) {
 }
 
 if (hash && isArticle) {
-  get_article(hash, function() {
-    get_folders(function() {
-      get_labels(refresh_feeds);
-    });
-  });
+  getArticle(hash).then(getFolders).then(getLabels).then(refreshFeeds);
 } else {
-  get_articles(function() {
-    get_folders(function() {
-      get_labels(refresh_feeds);
-    });
-  });
+  getArticles().then(getFolders).then(getLabels).then(refreshFeeds);
 }

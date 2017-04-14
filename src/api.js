@@ -14,7 +14,7 @@ function formFetchParams(data) {
   return {
     body: formBody(data),
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
   };
 }
@@ -31,18 +31,23 @@ function apiFetch(endpoint, fetchParams) {
     .catch(e => { throw e });
 }
 
-function apiFormFetch(endpoint, params, method) {
-  const fetchParams = formFetchParams(params);
-  return apiFetch(endpoint, {...fetchParams, method });
+function authHeader(token) {
+  return `Basic ${base64_encode(`${token}:`)}`;
 }
 
-const api = {
-  get: (endpoint) => apiFetch(endpoint, { method: 'GET' }),
-  post: (endpoint, params) => apiFormFetch(endpoint, params, 'POST'),
-  del: (endpoint, params) => apiFormFetch(endpoint, params, 'DELETE'),
-};
-
 export default (username, token) => {
+  const apiFormFetch = (endpoint, params, method) => {
+    const fetchParams = formFetchParams(params);
+    fetchParams.headers.authorization = authHeader(token);
+    return apiFetch(endpoint, {...fetchParams, method });
+  };
+
+  const api = {
+    get: (endpoint) => apiFetch(endpoint, { method: 'GET' }),
+    post: (endpoint, params) => apiFormFetch(endpoint, params, 'POST'),
+    del: (endpoint, params) => apiFormFetch(endpoint, params, 'DELETE'),
+  };
+
   return {
     get: api.get,
     articles: {
@@ -66,6 +71,10 @@ export default (username, token) => {
         },
         get: (label) => api.get(`${username}/labels/${encodeURIComponent(label)}`),
         post: (label, hash) => {
+          const endpoint = `${username}/labels/${encodeURIComponent(label)}`;
+          return api.post(endpoint, { hash });
+        },
+        del: (label, hash) => {
           const endpoint = `${username}/labels/${encodeURIComponent(label)}`;
           return api.del(endpoint, { hash });
         },

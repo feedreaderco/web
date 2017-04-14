@@ -1,4 +1,7 @@
 import api from './api';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ArticleBody from './components/ArticleBody';
 
 const token = localStorage.token;
 const user = localStorage.user;
@@ -228,6 +231,7 @@ function displayArticle(article) {
   element.appendChild(text);
   element.appendChild(labels);
   const e = document.getElementById('articles').appendChild(element);
+  ReactDOM.render(<ArticleBody id={hash} />, e.text);
   if (!current) current = e;
 }
 

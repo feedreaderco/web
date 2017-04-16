@@ -1,7 +1,7 @@
-import api from './api';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ArticleBody from './components/ArticleBody';
+import api from './api';
+import Article from './components/Article';
 
 const token = localStorage.token;
 const user = localStorage.user;
@@ -103,21 +103,6 @@ function getFolders(callback) {
   }
 }
 
-function addLabel(newLabel) {
-  const labelName = newLabel.value;
-  const articleID = newLabel.parentElement.id;
-  const newLabelLink = document.createElement('a');
-  newLabel.value = '';
-  newLabelLink.href = `/${user}/labels/${encodeURIComponent(value)}`;
-  newLabelLink.className = 'pillbox empty';
-  newLabelLink.innerHTML = value;
-  newLabel.parentElement.insertBefore(newLabelLink, newLabel);
-  newLabel.style.display = 'none';
-  lib.user.labels.post(labelName, articleID).then(() => {
-    newLabelLink.className = 'pillbox'; 
-  }).catch(console.error);
-}
-
 function getLabels() {
   return lib.user.labels.get().then((response) => {
     if (response.labels) {
@@ -181,57 +166,9 @@ function getArticle(hash) {
 
 function displayArticle(article) {
   const element = document.createElement('div');
-  const title = document.createElement('h1');
-  const metaTitle = document.createElement('h2');
-  const text = document.createElement('div');
-  const link = document.createElement('a');
-  const metaLink = document.createElement('a');
-  const labels = document.createElement('div');
-  const newLabel = document.createElement('input');
-  const addLabel = document.createElement('input');
-  title.innerHTML = article.title;
-  metaTitle.innerHTML = article.meta.title;
-  link.href = article.link;
-  metaLink.href = `https://feedreader.co/feeds/${article.feedurl}`;
-  link.appendChild(title);
-  metaLink.appendChild(metaTitle);
-  text.innerHTML = article.description;
-  labels.id = article.hash;
-  labels.className = 'minor-margin-top';
-  labels.innerHTML = labelNames.map((labelName) => {
-    if (labelArticles[labelName].indexOf(article.hash) === -1) {
-      return '';
-    } else {
-    return `<a href=/${user}/labels/${encodeURIComponent(labelName)} class=pillbox>${labelName}</a>`;
-    }
-  }).join(' ');
-  newLabel.placeholder = 'Label Name';
-  newLabel.type = 'text';
-  newLabel.style.display = 'none';
-  newLabel.className = 'pillbox';
-  addLabel.className = 'pillbox';
-  addLabel.value = 'Label';
-  addLabel.type = 'submit';
-  addLabel.onclick = function() {
-    if (newLabel.style.display === 'none') {
-      newLabel.style.display = 'inline';
-      addLabel.value = 'Save';
-    } else {
-      add_label(newLabel);
-      addLabel.value = 'Label';
-    }
-    return false;
-  };
-  labels.appendChild(newLabel);
-  labels.appendChild(addLabel);
-  element.className = 'article';
   element.id = article.hash;
-  element.appendChild(link);
-  element.appendChild(metaLink);
-  element.appendChild(text);
-  element.appendChild(labels);
   const e = document.getElementById('articles').appendChild(element);
-  ReactDOM.render(<ArticleBody id={hash} />, e.text);
+  ReactDOM.render(<Article article={article} labels={labelArticles} user={user} />, e);
   if (!current) current = e;
 }
 

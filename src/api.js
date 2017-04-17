@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-fetch';
+import { btoa } from 'isomorphic-base64';
 
 function base64Encode(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
+  return btoa(unescape(encodeURIComponent(str)));
 }
 
 function singleParamFormBody(key, value) {
@@ -42,7 +43,8 @@ export default (username, token) => {
   const apiFormFetch = (endpoint, params, method) => {
     const fetchParams = formFetchParams(params);
     fetchParams.headers.authorization = authHeader(token);
-    return apiFetch(endpoint, { ...fetchParams, method });
+    fetchParams.method = method;
+    return apiFetch(endpoint, fetchParams);
   };
 
   const api = {

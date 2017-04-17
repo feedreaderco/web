@@ -55,6 +55,7 @@ export default (username, token) => {
 
   return {
     get: api.get,
+    signup: password => api.post('signup', { username, password }),
     articles: {
       get: id => api.get(`articles/${id}`),
     },

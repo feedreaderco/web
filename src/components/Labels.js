@@ -39,21 +39,21 @@ export default class Labels extends Component {
     const labelNames = Object.keys(this.props.labels).filter((name) => {
       return labels[name].indexOf(this.props.articleID) !== -1;
     });
-    return <div id={this.props.articleID} className='minor-margin-top'>
+    return (<div id={this.props.articleID} className="minor-margin-top">
       {labelNames.map(name => <Label user={this.props.user} label={name} />)}
       <input
-        type='text'
-        placeholder='Label Name'
-        style={{display: this.state.newLabelDisplay}}
+        type="text"
+        placeholder="Label Name"
+        style={{ display: this.state.newLabelDisplay }}
         value={this.state.newLabelValue}
-        className='pillbox'
+        className="pillbox"
       />
       <input
-        className='pillbox'
+        className="pillbox"
         value={this.state.addLabelButtonValue}
-        type='submit'
+        type="submit"
         onClick={this.onClick}
       />
-    </div>;
+    </div>);
   }
 }

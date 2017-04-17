@@ -12,18 +12,10 @@ export default class Labels extends Component {
     };
   }
 
-  addLabel() {
-    const newLabelLink = document.createElement('a');
-    this.setState({ newLabelValue: '', newLabelDisplay: 'none' });
-    api().user.labels.post(this.state.newLabelValue, this.props.articleID).then(() => {
-      newLabelLink.className = 'pillbox';
-    }).catch(console.error);
-  }
-
   onClick() {
     if (this.state.newLabelButtonDisplay === 'none') {
       this.setState({
-        newLabelButtonDisplay: 'inline',
+        newLabelDisplay: 'inline',
         addLabelButtonValue: 'Save',
       });
     } else {
@@ -35,6 +27,14 @@ export default class Labels extends Component {
     return false;
   }
 
+  addLabel() {
+    //    const newLabelLink = document.createElement('a');
+    this.setState({ newLabelValue: '', newLabelDisplay: 'none' });
+    api().user.labels.post(this.state.newLabelValue, this.props.articleID).then(() => {
+      //      newLabelLink.className = 'pillbox';
+    }).catch(console.error);
+  }
+
   render() {
     const labelNames = Object.keys(this.props.labels).filter((name) => {
       return labels[name].indexOf(this.props.articleID) !== -1;
@@ -44,7 +44,8 @@ export default class Labels extends Component {
       <input
         type='text'
         placeholder='Label Name'
-        style={{display: this.state.newLabelButtonDisplay}}
+        style={{display: this.state.newLabelDisplay}}
+        value={this.state.newLabelValue}
         className='pillbox'
       />
       <input

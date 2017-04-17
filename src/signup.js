@@ -1,13 +1,12 @@
 import api from './api';
 
-var user = '';
-var form = document.getElementById('signupForm');
-var signupButton = document.getElementById('signup');
-
+const signupButton = document.getElementById('signup');
 function signup() {
-  user = form.elements["user"].value;
+  const form = document.getElementById('signupForm');
+  const user = form.elements.user.value;
+  const password = form.elements.password.value;
   localStorage.user = user;
-  api('POST', 'signup', function(response) {
+  api('POST', 'signup', (response) => {
     if (response.token) {
       form.style.display = 'none';
       localStorage.token = response.token;
@@ -16,7 +15,7 @@ function signup() {
       console.log(response);
       alert('Something went wrong - please contact me at arpith@feedreader.co');
     }
-  }, "user=" + user + "&password=" + form.elements["password"].value);
+  }, `user=${user}&password=${password}`);
   return false;
 }
 

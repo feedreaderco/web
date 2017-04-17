@@ -12,7 +12,8 @@ export default class Labels extends Component {
     };
   }
 
-  onClick() {
+  onClick(e) {
+    e.preventDefault();
     if (this.state.newLabelButtonDisplay === 'none') {
       this.setState({
         newLabelDisplay: 'inline',
@@ -24,7 +25,6 @@ export default class Labels extends Component {
         addLabelButtonValue: 'Label',
       });
     }
-    return false;
   }
 
   addLabel() {

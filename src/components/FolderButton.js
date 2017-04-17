@@ -22,13 +22,13 @@ export default class FolderButton extends Component {
     }).catch(console.error);
   }
 
-  onClick() {
+  onClick(e) {
+    e.preventDefault();
     if (this.state.className === 'pillbox') {
       removeFromFolder(folderButton);
     } else {
       addToFolder(folderButton);
     }
-    return false;
   }
  
   render() {

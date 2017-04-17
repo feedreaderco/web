@@ -9,14 +9,14 @@ export default class AddFolderButton extends Component {
     };
   }
 
-  onClick() {
+  onClick(e) {
+    e.preventDefault();
     if (this.state.textInputDisplay === 'none') {
       this.setState({ textInputDisplay: 'inline', buttonValue: 'Save' });
     } else {
       addToNewFolder();
       this.setState({ buttonValue: 'New Folder' });
     }
-    return false;
   }
 
   addToNewFolder(newFolder) {

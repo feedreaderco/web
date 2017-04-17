@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import api from './api';
 import Article from './components/Article';
+import FolderLinks from './components/FolderLinks';
+import FolderButtons from './components/FolderButtons';
 
 const token = localStorage.token;
 const user = localStorage.user;
@@ -14,108 +16,43 @@ const labelArticles = {};
 let hash = splitPathname.pop();
 let pathname = splitPathname.join('/');
 let labelNames = [];
-let viewedFeed = '';
 let current;
 let articles;
 
-function addToFolder(folderButton) {
-  const folderName = folderButton.value;
-  lib.user.folders.folder.post(folderName, viewedFeed).then(() => {
-    folderButton.className = 'pillbox';
-  }).catch(console.error);
-}
-
-function removeFromFolder(folderButton) {
-  const folderName = folderButton.value;
-  lib.user.folders.folder.del(folderName, viewedFeed).then(() => {
-    folderButton.className = 'pillbox empty';
-  }).catch(console.error);
-}
-
-function createFolderButton(folderName) {
-  const folderButton = document.createElement('input');
-  folderButton.type = 'submit';
-  folderButton.className = 'pillbox empty';
-  folderButton.value = folderName;
-  folderButton.onclick = () => {
-    if (folderButton.className === 'pillbox') {
-      removeFromFolder(folderButton);
-    } else {
-      addToFolder(folderButton);
-    }
-    return false;
-  };
-  return folderButton;
-}
-
-function addToNewFolder(newFolder) {
-  const newButton = createFolderButton(newFolder.value);
-  newFolder.value = '';
-  newFolder.parentElement.insertBefore(newButton, newFolder);
-  newFolder.style.display = 'none';
-  addToFolder(newButton);
+function displayFolders({ allFolders, folders }) {
+  const foldersDiv = document.getElementById('folders');
+  if (splitPathname[1] === 'feeds') {
+    const feed = pathname.slice(7, -1);
+    if (!allFolders || !folders) return;
+    ReactDOM.render(<FolderButtons
+      folders={folders}
+      user={user} 
+      allFolders={allFolders} 
+      feed={feed} />, foldersDiv);
+  } else {
+    if (!folders) return;
+    ReactDOM.render(<FolderLinks folders={folders} user={user} />, foldersDiv);
+  }
 }
 
 function getFolders(callback) {
-  const foldersDiv = document.getElementById('folders');
-  if (splitPathname[1] === 'feeds') {
-    viewedFeed = pathname.slice(7, -1);
-    return lib.user.folders.get().then((response) => {
-      if (response.allFolders && response.folders) {
-        response.allFolders.forEach((folderName, position) => {
-          const folderButton = createFolderButton(folderName);
-          if (response.folders.indexOf(folderName) !== -1) {
-            folderButton.className = 'pillbox';
-          }
-          foldersDiv.appendChild(folderButton);
-        });
-        const addFolder = document.createElement('input');
-        const newFolder = document.createElement('input');
-        newFolder.placeholder = 'Folder Name';
-        newFolder.type = 'text';
-        newFolder.style.display = 'none';
-        newFolder.className = 'pillbox';
-        addFolder.className = 'pillbox';
-        addFolder.value = 'New Folder';
-        addFolder.type = 'submit';
-        addFolder.onclick = () => {
-          if (newFolder.style.display === 'none') {
-            newFolder.style.display = 'inline';
-            addFolder.value = 'Save';
-          } else {
-            addToNewFolder(newFolder);
-            addFolder.value = 'New Folder';
-          }
-          return false;
-        };
-        foldersDiv.appendChild(newFolder);
-        foldersDiv.appendChild(addFolder);
-      }
-    }).catch(console.error);
-  } else {
-    return lib.user.folders.get().then((response) => {
-      if (response.folders) {
-        foldersDiv.innerHTML = response.folders.map((folder) => {
-          return `<a href=/${user}/folders/${encodeURIComponent(folder)} class=pillbox>${folder}</a>`;
-        }).join(' ');
-      }
-    }).catch(console.error);
-  }
+  return lib.user.folders.get()
+    .then(displayFolders)
+    .catch(console.error);
+}
+
+function storeLabelArticles(label) {
+  return lib.user.labels.get(label).then(({ articles }) => {
+    labelArticles[feedLabel] = articles || [];
+  });
 }
 
 function getLabels() {
   return lib.user.labels.get().then((response) => {
-    if (response.labels) {
-      labelNames = response.labels;
-      response.labels.forEach((labelName) => {
-        lib.user.labels.get(labelName).then((response) => {
-          labelArticles[feedLabel] = [];
-          if (response.articles) {
-            labelArticles[feedLabel] = response.articles;
-          }
-        });
-      });
-    }
+    if (!response.labels) return;
+    labelNames = response.labels;
+    const promiseArr = response.labels.map(fetchLabelArticles);
+    return promise.all(promiseArr);
   }).catch(console.error);
 }
 
@@ -136,20 +73,22 @@ function getArticles() {
   });
 }
 
+function refreshFeed({ key, title }) {
+  return lib.feeds.get(key).then(({articles}) => {
+    if (!articles) return;
+    console.log(`Refreshed ${title}, ${articles.length} articles so far`);
+  }).catch((err) => {
+    console.log(`Could not refresh ${title}: ${err}`);
+  });
+}
+
 function refreshFeeds() {
   if (!token) return;
-  lib.user.feeds.get().then((response) => {
-    if (!response.feeds) return;
-    const promiseArr = response.feeds.map(({ key, title }) => {
-      return lib.feeds.get(key).then(({articles}) => {
-        if (!articles) return;
-        console.log(`Refreshed ${title}, ${articles.length} articles so far`);
-      }).catch((err) => {
-        console.log(`Could not refresh ${title}: ${err}`);
-      });
-    }).catch(console.error);
-    Promise.all(promiseArr);
-  });
+  lib.user.feeds.get().then(({ feeds }) => {
+    if (!feeds) return;
+    const promiseArr = feeds.map(refreshFeed);
+    return Promise.all(promiseArr);
+  }).catch(console.error);
 }
 
 function getArticle(hash) {

@@ -1,12 +1,14 @@
 import api from './api';
 
-function getToken() {
+const login = document.getElementById('login');
+
+function getToken(e) {
+  e.preventDefault();
   const form = document.getElementById('loginForm');
-  const login = document.getElementById('login');
   const user = form.elements.user.value;
   const password = form.elements.password.value;
   api(user).user.tokens.create(password).then((response) => {
-    if (!response.token) throw '';
+    if (!response.token) throw new Error();
     form.style.display = 'none';
     localStorage.token = response.token;
     localStorage.user = user;
@@ -14,7 +16,6 @@ function getToken() {
   }).catch(() => {
     alert('Please type that out again');
   });
-  return false;
 }
 
 login.onclick = getToken;

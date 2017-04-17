@@ -128,7 +128,7 @@ function updateState() {
     history.replaceState({ id: current.id }, '', `https://feedreader.co${pathname}${current.id}`);
     if (token) {
       console.log(`Marking ${hash} as read`);
-      api.user.labels.post('read', { hash }).then(() => {
+      lib.user.labels.post('read', { hash }).then(() => {
         console.log(`Marked ${hash} as read`);
       }).catch(() => {
         console.log(`Couldn't mark ${hash} as read`);

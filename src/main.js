@@ -182,7 +182,10 @@ function updateState() {
     } else {
       current = current.nextSibling;
     }
-    document.title = `${current.childNodes[0].firstChild.innerHTML} - ${current.childNodes[1].firstChild.innerHTML } (feedreader.co)`;
+    const articleDiv = current.firstChild;
+    const articleTitle = articleDiv.childNodes[0].firstChild.innerHTML;
+    const feedTitle = articleDiv.childNodes[1].firstChild.innerHTML;
+    document.title = `${articleTitle} - ${feedTitle} (feedreader.co)`;
     history.replaceState({ id: current.id }, '', `https://feedreader.co${pathname}${current.id}`);
     if (token) {
       console.log(`Marking ${hash} as read`);

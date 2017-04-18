@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 
 app.get('/articles/:id/body', (req, res) => {
   api().articles.get(req.params.id).then(({ article }) => {
-    const reactString = renderToString(<ArticleBody article={article} />);
+    const reactString = renderToString(<ArticleBody body={article.description} />);
     res.render('article', { reactString });
   });
 });

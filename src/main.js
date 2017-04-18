@@ -15,7 +15,6 @@ const isArticle = splitPathname[splitPathname.length - 1] === 'articles';
 const labelArticles = {};
 let hash = splitPathname.pop();
 let pathname = splitPathname.join('/');
-let labelNames = [];
 let current;
 let articles;
 
@@ -26,33 +25,53 @@ function displayFolders({ allFolders, folders }) {
     if (!allFolders || !folders) return;
     ReactDOM.render(<FolderButtons
       folders={folders}
-      user={user} 
-      allFolders={allFolders} 
-      feed={feed} />, foldersDiv);
+      user={user}
+      allFolders={allFolders}
+      feed={feed}
+    />, foldersDiv);
   } else {
     if (!folders) return;
     ReactDOM.render(<FolderLinks folders={folders} user={user} />, foldersDiv);
   }
 }
 
-function getFolders(callback) {
+function getFolders() {
   return lib.user.folders.get()
     .then(displayFolders)
     .catch(console.error);
 }
 
 function storeLabelArticles(label) {
-  return lib.user.labels.get(label).then(({ articles }) => {
-    labelArticles[feedLabel] = articles || [];
+  return lib.user.labels.get(label).then((response) => {
+    labelArticles[label] = response.articles || [];
   });
 }
 
 function getLabels() {
   return lib.user.labels.get().then((response) => {
     if (!response.labels) return;
-    labelNames = response.labels;
-    const promiseArr = response.labels.map(fetchLabelArticles);
-    return promise.all(promiseArr);
+    const promiseArr = response.labels.map(storeLabelArticles);
+    Promise.all(promiseArr);
+  }).catch(console.error);
+}
+
+function displayArticle(article) {
+  const element = document.createElement('div');
+  element.id = article.hash;
+  const e = document.getElementById('articles').appendChild(element);
+  ReactDOM.render(<Article article={article} labels={labelArticles} user={user} />, e);
+  if (!current) current = e;
+}
+
+function getArticle(id) {
+  if (!id) return;
+  lib.articles.get(id).then(({ article, error }) => {
+    if (!article) {
+      console.error(`Could not parse articles/${id}`, error);
+    }
+    if (!document.getElementById(id)) {
+      displayArticle(article);
+    }
   }).catch(console.error);
 }
 
@@ -68,15 +87,15 @@ function getArticles() {
       if (i < 0) {
         i = 0;
       }
-      articles.slice(i, i+4).forEach(getArticle);
+      articles.slice(i, i + 4).forEach(getArticle);
     }
   });
 }
 
 function refreshFeed({ key, title }) {
-  return lib.feeds.get(key).then(({articles}) => {
-    if (!articles) return;
-    console.log(`Refreshed ${title}, ${articles.length} articles so far`);
+  return lib.feeds.get(key).then((response) => {
+    if (!response.articles) return;
+    console.log(`Refreshed ${title}, ${response.articles.length} articles so far`);
   }).catch((err) => {
     console.log(`Could not refresh ${title}: ${err}`);
   });
@@ -87,36 +106,18 @@ function refreshFeeds() {
   lib.user.feeds.get().then(({ feeds }) => {
     if (!feeds) return;
     const promiseArr = feeds.map(refreshFeed);
-    return Promise.all(promiseArr);
+    Promise.all(promiseArr);
   }).catch(console.error);
-}
-
-function getArticle(hash) {
-  if (!hash) return;
-  return lib.articles.get(hash).then(({ article, error }) => {
-    if (!article) {
-      console.error(`Could not parse articles/${hash}`, error);
-    }
-    if (!document.getElementById(hash)) {
-      displayArticle(article);
-    }
-  }).catch(console.error);
-}
-
-function displayArticle(article) {
-  const element = document.createElement('div');
-  element.id = article.hash;
-  const e = document.getElementById('articles').appendChild(element);
-  ReactDOM.render(<Article article={article} labels={labelArticles} user={user} />, e);
-  if (!current) current = e;
 }
 
 function updateState() {
-  if ((current.nextSibling.offsetTop < window.pageYOffset) || (current.offsetTop > window.pageYOffset)) {
-    const hash = current.id;
-    const i = articles.indexOf(hash);
-    getArticle(articles[i+5]);
-    if (current.offsetTop > window.pageYOffset) {
+  const nextArticleIsCurrent = current.nextSibling.offsetTop < window.pageYOffset;
+  const previousArticleIsCurrent = current.offsetTop > window.pageYOffset;
+  if (nextArticleIsCurrent || previousArticleIsCurrent) {
+    const id = current.id;
+    const i = articles.indexOf(id);
+    getArticle(articles[i + 5]);
+    if (previousArticleIsCurrent) {
       current = current.previousSibling;
     } else {
       current = current.nextSibling;
@@ -127,11 +128,11 @@ function updateState() {
     document.title = `${articleTitle} - ${feedTitle} (feedreader.co)`;
     history.replaceState({ id: current.id }, '', `https://feedreader.co${pathname}${current.id}`);
     if (token) {
-      console.log(`Marking ${hash} as read`);
-      lib.user.labels.post('read', { hash }).then(() => {
-        console.log(`Marked ${hash} as read`);
+      console.log(`Marking ${id} as read`);
+      lib.user.labels.post('read', { hash: id }).then(() => {
+        console.log(`Marked ${id} as read`);
       }).catch(() => {
-        console.log(`Couldn't mark ${hash} as read`);
+        console.log(`Couldn't mark ${id} as read`);
       });
     }
   }
@@ -139,7 +140,7 @@ function updateState() {
 
 pathname = `${pathname}/`;
 
-if ((hash.length != 32) && (hash.length != 40)) {
+if ((hash.length !== 32) && (hash.length !== 40)) {
   pathname = `${pathname}${hash}/`;
   hash = '';
 }

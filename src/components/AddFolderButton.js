@@ -30,12 +30,14 @@ export default class AddFolderButton extends Component {
   render() {
     return (
       <div>
-        <input type="text"
+        <input
+          type="text"
           placeholder="Folder Name"
           display={this.state.textInputDisplay}
           className="pillbox"
         />
-        <input type="submit"
+        <input
+          type="submit"
           className="pillbox"
           value={this.state.buttonValue}
           onClick={this.onClick}

@@ -37,7 +37,7 @@ export default class Labels extends Component {
 
   render() {
     const labelNames = Object.keys(this.props.labels).filter((name) => {
-      return labels[name].indexOf(this.props.articleID) !== -1;
+      return this.props.labels[name].indexOf(this.props.articleID) !== -1;
     });
     return (<div id={this.props.articleID} className="minor-margin-top">
       {labelNames.map(name => <Label user={this.props.user} label={name} />)}

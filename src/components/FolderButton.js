@@ -9,6 +9,15 @@ export default class FolderButton extends Component {
     }
     this.state = { className };
   }
+
+  onClick(e) {
+    e.preventDefault();
+    if (this.state.className === 'pillbox') {
+      this.removeFromFolder(folderButton);
+    } else {
+      this.addToFolder(folderButton);
+    }
+  }
  
   addToFolder() {
     this.props.lib.user.folders.folder.post(this.props.folder, this.props.feed).then(() => {
@@ -22,20 +31,11 @@ export default class FolderButton extends Component {
     }).catch(console.error);
   }
 
-  onClick(e) {
-    e.preventDefault();
-    if (this.state.className === 'pillbox') {
-      removeFromFolder(folderButton);
-    } else {
-      addToFolder(folderButton);
-    }
-  }
- 
   render() {
     return <input type="submit"
       className={this.state.className}
       value={this.props.folder}
-      onClick={onClick}
+      onClick={this.onClick}
     />;
   }
 }

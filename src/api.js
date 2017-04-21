@@ -1,5 +1,7 @@
-import fetch from 'isomorphic-fetch';
-import { btoa } from 'isomorphic-base64';
+import fetchPonyfill from 'fetch-ponyfill';
+import { btoa } from 'Base64';
+
+const { fetch } = fetchPonyfill();
 
 function base64Encode(str) {
   return btoa(unescape(encodeURIComponent(str)));

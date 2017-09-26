@@ -19,6 +19,9 @@ embed, iframe, object, img, p, div, table, tbody, big, h1, h3 {
   max-width: 100%!important;
   overflow-x: auto!important;
 }
+iframe {
+  width: 100%!important;
+}
 body {
   width: 36em!important;
   max-width: 88%!important;

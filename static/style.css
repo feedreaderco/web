@@ -31,7 +31,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', helvetica, sans!important;
   text-rendering: optimizeLegibility!important;
   color: #4A525A!important;
-  background: #FEFCFF!important;
 }
 big, h1, h2, h3 {
   font-weight: 300!important;
@@ -72,7 +71,7 @@ header {
   padding-top: 0.8em;
   padding-bottom: 0.4em;
   top: 0;
-  background: #FEFCFF;
+  background: #fff;
 }
 #logo img {
   height: 1em!important;

@@ -65,14 +65,21 @@ function displayArticle(article) {
 
 function getArticle(id) {
   if (!id) return;
-  lib.articles.get(id).then(({ article, error }) => {
+  return lib.articles.get(id).then(({ article, error }) => {
     if (!article) {
       console.error(`Could not parse articles/${id}`, error);
     }
     if (!document.getElementById(id)) {
       displayArticle(article);
     }
-  }).catch(console.error);
+  });
+}
+
+function getNArticles(articles, n, i) {
+  if (i >= articles.length) return;
+  return getArticle(articles[i])
+    .then(() => getNArticles(articles, n - 1, i + 1),
+      () => getNArticles(articles, n, i + 1));
 }
 
 function getArticles() {
@@ -87,7 +94,7 @@ function getArticles() {
       if (i < 0) {
         i = 0;
       }
-      articles.slice(i, i + 4).forEach(getArticle);
+      getNArticles(articles, 5, i);
     }
   });
 }

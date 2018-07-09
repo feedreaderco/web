@@ -78,8 +78,13 @@ function getArticle(id) {
 function getNArticles(articles, n, i) {
   if (i >= articles.length) return;
   return getArticle(articles[i])
-    .then(() => getNArticles(articles, n - 1, i + 1),
-      () => getNArticles(articles, n, i + 1));
+    .then(() => {
+      console.log("success");
+      getNArticles(articles, n - 1, i + 1)
+    }, () => {
+      console.log("failure");
+      getNArticles(articles, n, i + 1)
+    });
 }
 
 function getArticles() {

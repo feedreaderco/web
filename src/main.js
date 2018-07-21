@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import api from './api';
 import Article from './components/Article';
-import FolderLinks from './components/FolderLinks';
-import FolderButtons from './components/FolderButtons';
 
 const token = localStorage.token;
 const user = localStorage.user;
@@ -17,29 +15,6 @@ let hash = splitPathname.pop();
 let pathname = splitPathname.join('/');
 let current;
 let articles;
-
-function displayFolders({ allFolders, folders }) {
-  const foldersDiv = document.getElementById('folders');
-  if (splitPathname[1] === 'feeds') {
-    const feed = pathname.slice(7, -1);
-    if (!allFolders || !folders) return;
-    ReactDOM.render(<FolderButtons
-      folders={folders}
-      user={user}
-      allFolders={allFolders}
-      feed={feed}
-    />, foldersDiv);
-  } else {
-    if (!folders) return;
-    ReactDOM.render(<FolderLinks folders={folders} user={user} />, foldersDiv);
-  }
-}
-
-function getFolders() {
-  return lib.user.folders.get()
-    .then(displayFolders)
-    .catch(console.error);
-}
 
 function storeLabelArticles(label) {
   return lib.user.labels.get(label).then((response) => {
@@ -156,7 +131,7 @@ if (user) {
 }
 
 if (hash && isArticle) {
-  getArticle(hash).then(getFolders).then(getLabels).then(refreshFeeds);
+  getArticle(hash).then(getLabels).then(refreshFeeds);
 } else {
-  getArticles().then(getFolders).then(getLabels).then(refreshFeeds);
+  getArticles().then(getLabels).then(refreshFeeds);
 }

@@ -29,9 +29,6 @@ function displayFolders({ allFolders, folders }) {
       allFolders={allFolders}
       feed={feed}
     />, foldersDiv);
-  } else {
-    if (!folders) return;
-    ReactDOM.render(<FolderLinks folders={folders} user={user} />, foldersDiv);
   }
 }
 

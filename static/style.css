@@ -2,36 +2,32 @@
   body { font-size: 19px!important; }
   h1 { font-size: 24px!important; }
   embed, iframe, object { max-height: 10em!important; }
-  header { position: absolute; }
 }
 @media all and (min-device-width:768px) {
   body { font-size: 19px!important; }
   h1 { font-size: 26px!important; }
   embed, iframe, object { max-height: 20em!important; }
-  header { position: fixed; }
 }
 @media all and (min-device-width:1024px) {
   body { font-size:21px!important; }
   h1 { font-size: 28px!important; }
-  header { position: fixed; }
 }
 embed, iframe, object, img, p, div, table, tbody, big, h1, h3 {
   max-width: 100%!important;
-  overflow-x: auto!important;
 }
 iframe {
   width: 100%!important;
 }
 body {
-  width: 36em!important;
-  max-width: 88%!important;
   padding-top: 0;
-  margin: auto!important;
+  margin: 0;
   line-height: 1.6em!important;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', helvetica, sans!important;
   text-rendering: optimizeLegibility!important;
   color: #4A525A!important;
+  display: flex;
 }
+
 big, h1, h2, h3 {
   font-weight: 300!important;
   font-family: inherit!important;
@@ -45,7 +41,6 @@ big, h2 {
 }
 h1 {
   padding-bottom: 0.2em!important;
-  margin-top: 0.4em!important;
 }
 h2 {
   line-height: 1.4em!important;
@@ -65,36 +60,68 @@ a {
   border-bottom: thin solid!important;
   border-bottom-color: #157DEC!important;
 }
-header {
-  width: 36em;
-  max-width: 88%;
-  padding-top: 0.8em;
+#title {
+  border: none!important;
+  padding-top: 0.6em;
   padding-bottom: 0.4em;
-  top: 0;
+  display: block;
   background: #fff;
 }
-#logo img {
-  height: 1em!important;
-}
-#logo h1 {
-  display: inline;
-  margin-left: 0.3em!important;
+#title h1 {
   margin-top: 0!important;
 }
+#col1 {
+  flex: 1 1 0;
+  margin-right: 1em;
+}
+#col3 {
+  flex: 1 1 0;
+  margin-left: 1em;
+}
+#col2 {
+  flex: 3 1 0;
+}
+#logo img {
+  height: 2em!important;
+}
 #logo {
-  float: left;
+  padding-top: 0.6em;
   display: block;
   border: none!important;
+  float: right;
+}
+#top h2 {
+  display: inline;
+}
+#nav {
+  float: right;
+  clear: both;
+}
+#nav a {
+  text-align: right;
+  float: right;
+  clear: both;
+  border: none!important;
+  font-weight: 300!important;
+}
+#folders a {
+  border: none!important;
+  margin-right: 2em;
+  display: inline-block;
 }
 #user {
-  float: right;
+  padding-top: 0.6em!important;
   line-height: 1.6em!important;
 }
 #top {
   margin-top: 0.4em!important;
 }
-#articles {
-  margin-top: 5em;
+.sticky-wrapper {
+  position: sticky;
+  top: 0;
+}
+.top-link {
+  width: 10em;
 }
 .article {
   margin-bottom: 1.6em!important;

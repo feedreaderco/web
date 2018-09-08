@@ -13,7 +13,8 @@
   }
   if (!feed) for (var i = 0; i < aTags.length; ++i) {
     var tag = aTags[i];
-    if ((tag.innerHTML.indexOf('atom')!=-1)||(tag.innerHTML.indexOf('rss')!=-1)||(tag.innerHTML.indexOf('xml')!=-1)) {
+    var html = tag.innerHTML.toLowerCase();
+    if ((html.indexOf('atom')!=-1)||(html.indexOf('rss')!=-1)||(html.indexOf('xml')!=-1)) {
       feed = tag.href;
       break;
     }

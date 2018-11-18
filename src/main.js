@@ -4,6 +4,7 @@ import api from './api';
 import Article from './components/Article';
 import FolderLinks from './components/FolderLinks';
 import FolderButtons from './components/FolderButtons';
+import UserLink from './components/UserLink';
 
 const token = localStorage.token;
 const user = localStorage.user;
@@ -147,13 +148,8 @@ if ((hash.length !== 32) && (hash.length !== 40)) {
 
 window.onscroll = updateState;
 
-if (user) {
-  userLink.href = `/${user}`;
-  userH2.innerHTML = user;
-} else {
-  userLink.href = '/login';
-  userH2.innerHTML = 'Login';
-}
+const userLinkDiv = document.getElementById('userLinkContainer');
+ReactDOM.render(<UserLink user={user}/>, userLinkDiv);
 
 if (hash && isArticle) {
   getArticle(hash).then(getFolders).then(getLabels).then(refreshFeeds);

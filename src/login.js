@@ -2,6 +2,10 @@ import api from './api';
 
 const login = document.getElementById('login');
 
+function testToken(user, token) {
+  return api(user, token).user.feeds.get();
+}
+
 function getToken(e) {
   e.preventDefault();
   const form = document.getElementById('loginForm');
@@ -15,6 +19,12 @@ function getToken(e) {
     window.location.pathname = `${user}/feeds`;
   }).catch(() => {
     alert('Please type that out again');
+  });
+}
+
+if (localStorage.token && localStorage.user) {
+  testToken(localStorage.user, localStorage.token).then(() => {
+    window.location.pathname = `${localStorage.user}/feeds`;
   });
 }
 

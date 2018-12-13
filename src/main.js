@@ -152,7 +152,7 @@ const userLinkDiv = document.getElementById('userLinkContainer');
 ReactDOM.render(<UserLink user={user}/>, userLinkDiv);
 
 if (hash && isArticle) {
-  getArticle(hash).then(getFolders).then(getLabels).then(refreshFeeds);
+  getArticle(hash).then(getLabels).then(refreshFeeds);
 } else {
-  getArticles().then(getFolders).then(getLabels).then(refreshFeeds);
+  getArticles().then(getLabels).then(refreshFeeds);
 }

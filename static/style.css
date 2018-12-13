@@ -90,6 +90,10 @@ header {
   float: right;
   line-height: 1.6em!important;
 }
+#userLinkContainer {
+  float: right;
+  line-height: 1.6em!important;
+}
 #top {
   margin-top: 0.4em!important;
 }

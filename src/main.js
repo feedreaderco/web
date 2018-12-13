@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import api from './api';
 import Article from './components/Article';
-import FolderLinks from './components/FolderLinks';
-import FolderButtons from './components/FolderButtons';
+import SubscribeButton from './components/SubscribeButton';
 import UserLink from './components/UserLink';
 
 const token = localStorage.token;
@@ -14,32 +13,25 @@ const userH2 = document.getElementById('user');
 const splitPathname = window.location.pathname.split('/');
 const isArticle = splitPathname[splitPathname.length - 1] === 'articles';
 const labelArticles = {};
+const userLinkDiv = document.getElementById('userLinkContainer');
 let hash = splitPathname.pop();
 let pathname = splitPathname.join('/');
 let current;
 let articles;
 
-function displayFolders({ allFolders, folders }) {
-  const foldersDiv = document.getElementById('folders');
-  if (splitPathname[1] === 'feeds') {
-    const feed = pathname.slice(7, -1);
-    if (!allFolders || !folders) return;
-    ReactDOM.render(<FolderButtons
-      folders={folders}
-      user={user}
-      allFolders={allFolders}
-      feed={feed}
-    />, foldersDiv);
-  } else {
-    if (!folders) return;
-    ReactDOM.render(<FolderLinks folders={folders} user={user} />, foldersDiv);
+function displaySubscribeButton({ allFolders, folders }) {
+  const feed = pathname.slice(7, -1);
+  let isSelectedInitially = false;
+  let folderNames = ['Other'];
+  if (allFolders && allFolders.length > 0 && folders && folders.length > 0) {
+    folderNames = folders;
+    isSelectedInitially = true;
   }
-}
-
-function getFolders() {
-  return lib.user.folders.get()
-    .then(displayFolders)
-    .catch(console.error);
+  ReactDOM.render(<SubscribeButton
+    folderNames={folderNames}
+    isSelectedInitially={isSelectedInitially}
+    feedURL={feed}
+    />, userLinkDiv);
 }
 
 function storeLabelArticles(label) {
@@ -148,8 +140,14 @@ if ((hash.length !== 32) && (hash.length !== 40)) {
 
 window.onscroll = updateState;
 
-const userLinkDiv = document.getElementById('userLinkContainer');
-ReactDOM.render(<UserLink user={user}/>, userLinkDiv);
+if (splitPathname[1] === 'feeds' && user) {
+  const feed = pathname.slice(7, -1);
+  lib.user.folders.get(feed)
+    .then(displaySubscribeButton)
+    .catch(console.error);
+} else {
+  ReactDOM.render(<UserLink user={user}/>, userLinkDiv);
+}
 
 if (hash && isArticle) {
   getArticle(hash).then(getLabels).then(refreshFeeds);

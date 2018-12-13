@@ -1,7 +1,6 @@
 import React from 'react';
 import api from '../api';
-import PillBox from '../styles/PillBox';
-import PillBoxEmpty from '../styles/PillBoxEmpty';
+import buttonStyle from '../styles/button';
 
 const token = localStorage.token;
 const user = localStorage.user;
@@ -38,11 +37,6 @@ class SubscribeButton extends React.Component {
   }
 
   render() {
-    const style = () => {
-      if (this.state.isSelected) return PillBox;
-      else return PillBoxEmpty;
-    };
-
     const onclick = (e) => {
       e.target.blur();
       if (this.state.isSelected) this.removeFeed();
@@ -57,7 +51,7 @@ class SubscribeButton extends React.Component {
     return (
       <input
         type='button'
-        style={style()}
+        style={buttonStyle(this.state.isSelected)}
         value={value()}
         onClick={onclick}
       />

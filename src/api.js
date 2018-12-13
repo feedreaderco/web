@@ -92,7 +92,7 @@ export default (username, token) => {
           const endpoint = `${username}/folders`;
           return api.post(endpoint, { folder });
         },
-        get: feed => api.get(`${username}/folders?${feed}`),
+        get: feed => api.get(`${username}/folders?xmlurl=${feed}`),
         post: (folder, xmlurl) => {
           const endpoint = `${username}/folders/${encodeURIComponent(folder)}`;
           return api.post(endpoint, { xmlurl });

@@ -15,19 +15,19 @@ class FavoriteButton extends React.Component {
   }
 
   favorite(timeout=1000) {
-    lib.user.labels.post('favorite', this.props.hash).then(() => {
+    lib.user.labels.post('favorites', this.props.hash).then(() => {
       this.setState({isSelected: true});
     }).catch((e) => {
-      console.error('Could not favorite article, trying again:', e);
+      console.error('Could not add article to favorites, trying again:', e);
       window.setTimeout(() => this.favorite(timeout*2), timeout);
     });
   }
 
   unfavorite(timeout=1000) {
-    lib.user.labels.del('favorite', this.props.hash).then(() => {
+    lib.user.labels.del('favorites', this.props.hash).then(() => {
       this.setState({isSelected: false});
     }).catch((e) => {
-      console.error('Could not unfavorite article, trying again:', e);
+      console.error('Could not remove article from favorites, trying again:', e);
       window.setTimeout(() => this.unfavorite(timeout*2), timeout);
     });
   }

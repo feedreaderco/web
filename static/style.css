@@ -158,6 +158,9 @@ blockquote, figcaption {
 blockquote, p {
   margin-bottom: 1em!important;
 }
+p:last-child {
+  margin-bottom: 0!important;
+}
 blockquote {
   padding-left: 1em!important;
   border-left: thin solid!important;

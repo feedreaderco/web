@@ -67,7 +67,7 @@ a {
 }
 #top {
   width: 36em;
-  max-width: 88%;
+  max-width: 88%!important;
   padding-top: 0.8em;
   padding-bottom: 0;
   top: 0;

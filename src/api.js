@@ -77,7 +77,12 @@ export default (username, token) => {
           const endpoint = `${username}/labels`;
           return api.post(endpoint, { label });
         },
-        get: label => api.get(`${username}/labels/${encodeURIComponent(label)}`),
+        get: label => {
+          if (!label) {
+            return api.get(`${username}/labels`);
+          }
+          return api.get(`${username}/labels/${encodeURIComponent(label)}`);
+        },
         post: (label, hash) => {
           const endpoint = `${username}/labels/${encodeURIComponent(label)}`;
           return api.post(endpoint, { hash });

@@ -45,9 +45,8 @@ class FavoriteButton extends React.Component {
     }
 
     return (
-      <img
-        src={src}
-        style={style}
+      <div
+        style={style(src)}
         onClick={onclick}
       />
     );

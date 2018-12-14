@@ -11,6 +11,10 @@ const port = process.env.PORT || 8000;
 app.use(express.static('static'));
 app.set('view engine', 'ejs');
 
+app.get('/api', (req, res) => {
+  res.status(301).redirect("https://api.feedreader.co")
+});
+
 app.get('/articles/:id/body', (req, res) => {
   api().articles.get(req.params.id).then(({ article }) => {
     const reactString = renderToString(<ArticleBody body={article.description} />);

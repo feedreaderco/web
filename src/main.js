@@ -150,7 +150,7 @@ if (splitPathname[1] === 'feeds' && user) {
 }
 
 if (hash && isArticle) {
-  getArticle(hash).then(getLabels).then(refreshFeeds);
+  getLabels().then(() => getArticle(hash)).then(refreshFeeds);
 } else {
-  getArticles().then(getLabels).then(refreshFeeds);
+  getLabels().then(getArticles).then(refreshFeeds);
 }

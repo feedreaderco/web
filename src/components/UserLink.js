@@ -1,4 +1,5 @@
 import React from 'react';
+import style from '../styles/userLink';
 
 export default ({ user }) => {
   let text = 'Login';
@@ -11,5 +12,9 @@ export default ({ user }) => {
     e.preventDefault();
     window.location.pathname = href;
   }
-  return <a onClick={onclick} id="userLink"><h2 id="user">{text}</h2></a>;
+  return (
+    <a style={style} onClick={onclick} id="userLink">
+      <h2 id="user">{text}</h2>
+    </a>
+  );
 }

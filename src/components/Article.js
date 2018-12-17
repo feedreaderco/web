@@ -2,15 +2,12 @@ import React from 'react';
 import ArticleTitle from './ArticleTitle';
 import FeedTitle from './FeedTitle';
 import ArticleBody from './ArticleBody';
-import FavoriteButton from './FavoriteButton';
+import ArticleActions from './ArticleActions';
+import style from '../styles/article';
 
-function isFavorite(labels, hash) {
-  return labels['favorites'] && labels['favorites'].indexOf(hash) > -1;
-}
-
-export default ({ article, labels, user }) => <div className="article">
+export default ({ article, labels, user }) => <div style={style}>
   <ArticleTitle title={article.title} link={article.link} />
   <FeedTitle feedURL={article.feedurl} feedTitle={article.meta.title} />
   <ArticleBody body={article.description} />
-  <FavoriteButton hash={article.hash} isSelectedInitially={isFavorite(labels, article.hash)} />
+  <ArticleActions labels={labels} hash={article.hash} />
 </div>;

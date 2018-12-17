@@ -96,12 +96,7 @@ a {
 #articles {
   margin-top: 2.4em;
 }
-.article {
-  margin-bottom: 1.6em!important;
-  float: left!important;
-  clear: left!important;
-  word-wrap: break-word!important;
-}
+
 .pillbox {
   font-weight: 300!important;
   background: Gainsboro!important;

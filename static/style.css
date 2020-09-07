@@ -11,8 +11,8 @@
   #top { position: fixed; }
 }
 @media all and (min-device-width:1024px) {
-  body { font-size:21px!important; }
-  h1 { font-size: 28px!important; }
+  body { font-size:18px!important; }
+  h1 { font-size: 26px!important; }
   #top { position: fixed; }
 }
 embed, iframe, object, img, p, div, table, tbody, big, h1, h3 {
@@ -27,7 +27,7 @@ body {
   max-width: 88%!important;
   padding-top: 0;
   margin: auto!important;
-  line-height: 1.6em!important;
+  line-height: 1.5em!important;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', helvetica, sans!important;
   text-rendering: optimizeLegibility!important;
   color: #4A525A!important;
@@ -87,11 +87,11 @@ a {
 }
 #user {
   float: right;
-  line-height: 1.6em!important;
+  line-height: 1.5em!important;
 }
 #userLinkContainer {
   float: right;
-  line-height: 1.6em!important;
+  line-height: 1.5em!important;
 }
 #articles {
   margin-top: 2.4em;

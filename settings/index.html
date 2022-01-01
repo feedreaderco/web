@@ -1,0 +1,71 @@
+<!doctype html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel='stylesheet' type='text/css' href='/style.css'>
+<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/favicon-apple-touch-114.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/favicon-apple-touch-114.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/favicon-apple-touch-144.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/favicons-apple-touch-144.png">
+<link rel="icon" type="image/vnd.microsoft.icon" sizes="32x32 48x48" href="/favicon.ico">
+<link rel="icon" sizes="128x128" href="/favicon.icns">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<title>Feed Reader Settings</title>
+<body>
+<h1>Feed Reader</h1>
+<a href=# id=userlink></a>
+<h2>Import</h2>
+<form id=uploadForm method=POST action=#>
+<label for=opml>Import Subscriptions</label>
+<input placeholder=Subscriptions type=file id=opml name=opml>
+<input id=upload type=submit value='Upload'>
+</form>
+<p>Upload an OPML file of your subcriptions.</p>
+<form id=importForm method=POST action=#>
+<label for=gruser>Google Reader Username</label>
+<input placeholder="e.g., foo@gmail.com" type=email id=gruser>
+<label for=grpassword>Google Reader Password</label>
+<input placeholder="e.g., *****" type=password id=grpassword>
+<input id=import type=submit value="Import">
+</form>
+<p>Import your data from Google Reader.</p>
+<h2>Account</h2>
+<form id=accountForm method=POST action=#>
+<label for=user>Username</label>
+<input placeholder=Username type=email id=user>
+<label for=password>Password</label>
+<input placeholder=Password type=password id=password>
+<input id=save type=submit value='Save'>
+</form>
+<p>Update your personal details.</p>
+<h2>Export</h2>
+<p>You can use the <a href=/api>API</a> to export all your data.</p>
+</body>
+<script src=import.js></script>
+<script>
+var userlink = document.getElementById('userlink')
+, username = document.getElementById('user')
+, upload = document.getElementById('upload')
+, grimport = document.getElementById('import')
+, save = document.getElementById('save')
+, uploadOpml = function() {
+  api('POST',user+'/feeds/json',function(){
+    if (JSON.parse(this.responseText).success) window.location = window.location
+    return false
+  },new FormData(form))
+  return false
+}
+, importData = function() {
+  var user = document.getElementById('gruser').value
+  , password = document.getElementById('grpassword').value
+  googleReaderImport(user,password,function(){return false})
+  return false
+}
+if(!localStorage.token) window.location="/"
+else {
+  userlink.href= "/"+localStorage.user
+  userlink.innerHTML = "<h3>"+localStorage.user+"</h3>"
+  username.value = localStorage.user
+  upload.onclick = uploadOpml
+  grimport.onclick = importData
+}
+</script>

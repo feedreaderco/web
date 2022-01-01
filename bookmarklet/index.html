@@ -1,0 +1,38 @@
+<!doctype html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel='stylesheet' type='text/css' href='/style.css'>
+<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/favicon-apple-touch-114.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/favicon-apple-touch-114.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/favicon-apple-touch-144.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/favicons-apple-touch-144.png">
+<link rel="icon" type="image/vnd.microsoft.icon" sizes="32x32 48x48" href="/favicon.ico">
+<link rel="icon" sizes="128x128" href="/favicon.icns">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<title>View in Feed Reader</title>
+<body>
+<h1>Bookmarklet</h1>
+<h2 id=h2>Computers</h2>
+<p>Drag the bookmarklet above to your bookmarks toolbar.</p>
+<h2>IOS Devices</h2>
+<ol>
+<li>Copy this text:<br><code id=bookmarklet></code></li>
+<li>Bookmark this page</li>
+<li>Edit the bookmark</li>
+<li>Delete the address "https://feedreader.co/bookmarklet/"</li>
+<li>Paste and tap Done</li>
+</ol>
+</body>
+<script>
+var h1 = document.getElementById('h2')
+, add_bookmarklet = function() {
+  var bookmarklet = document.createElement('a')
+  , code = document.getElementById('bookmarklet')
+  bookmarklet.innerHTML = "View in Feed Reader"
+  bookmarklet.href = "javascript:var s=document.createElement('script');s.src='https://feedreader.co/bookmarklet.js';document.body.appendChild(s);"
+  code.innerHTML = bookmarklet.href
+  document.body.insertBefore(bookmarklet,h1.nextSibling)
+}
+if(localStorage.token) add_bookmarklet()
+else window.location = "/"
+</script>

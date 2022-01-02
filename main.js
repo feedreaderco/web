@@ -142,8 +142,11 @@
 	}
 	
 	function getArticles() {
-	  var strippedPathname = pathname.slice(1, -1);
-	  return lib.get(strippedPathname).then(function (response) {
+	  var endpoint = pathname.slice(1, -1);
+	  if (endpoint == "") {
+	    endpoint = user + '/feeds';
+	  }
+	  return lib.get(endpoint).then(function (response) {
 	    if (response.articles) {
 	      var i = 0;
 	      articles = response.articles;

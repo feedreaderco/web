@@ -16,7 +16,7 @@ function getToken(e) {
     form.style.display = 'none';
     localStorage.token = response.token;
     localStorage.user = user;
-    window.location.pathname = `${user}/feeds`;
+    window.location.pathname = "";
   }).catch(() => {
     alert('Please type that out again');
   });

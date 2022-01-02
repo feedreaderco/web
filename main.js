@@ -224,7 +224,7 @@
 	if (!user) {
 	  // no user logged in, redirect to signup page
 	  // there's a login link on that page
-	  window.location.pathname = "signup.html";
+	  window.location.pathname = "signup";
 	}
 	
 	if (splitPathname[1] === 'feeds' && user) {

@@ -218,6 +218,12 @@
 	
 	window.onscroll = updateState;
 	
+	if (!user) {
+	  // no user logged in, redirect to signup page
+	  // there's a login link on that page
+	  window.location.href = 'https://feedreader.co/signup.html';
+	}
+	
 	if (splitPathname[1] === 'feeds' && user) {
 	  var feed = pathname.slice(7, -1);
 	  lib.user.folders.get(feed).then(displaySubscribeButton).catch(console.error);

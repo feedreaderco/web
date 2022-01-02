@@ -14,27 +14,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Feed Reader</title>
 <body>
-<h1>Feed Reader</h1>
-<h2>Follow your favorite blogs</h2>
-<h3>Choose a username and password</h3>
-<form id="signupForm" method=POST action=https://api.feedreader.co/signup>
-<input placeholder=Username type=text name=user class ='pillbox empty'>
-<input placeholder=Password type=password name=password class='pillbox empty'>
-<input id="signup" type=submit value='Sign up for free!' class='pillbox'>
-</form>
-<a href=/login>Signed up? Login here</a></p>
-<p>If you're like <a href=http://twitter.com/arpith>me</a>, there are a bunch of blogs you read all the time. This is a way to keep track of them in one place, a fast and reliable replacement for Google Reader. Take a look at <a href=/arpith>the stuff I'm following</a> and see if you like the way <a href=/arpith/labels/read>articles are displayed</a>.</p>
-
-<p>If you don't mind getting an email or two asking for your feedback email me at <a href=mailto:arpith@feedreader.co>arpith@feedreader.co</a></p>
-
-<p>I should probably also mention that there is an <a href=/api>api</a> that you can use to access your data.</p>
-
+<div id=top>
+<a href=/ id=logo><h1>Feed Reader</h1></a>
+<div id=userLinkContainer></div>
+</div>
 <div id=feeds>
 </div>
 <div id=articles>
 </div>
 </body>
-<script>
-if (localStorage.token && localStorage.user) window.location.pathname = localStorage.user + '/feeds'
-</script>
-<script src='/signup.js' type='text/javascript'></script>
+<script src='/main.js' type='text/javascript'></script>

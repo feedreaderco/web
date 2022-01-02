@@ -38,8 +38,8 @@
     "fetch-ponyfill": "^4.0.0",
     "html-to-react": "^1.2.4",
     "json-loader": "^0.5.4",
-    "react": "^15.5.3",
-    "react-dom": "^15.5.3",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "webpack": "^1.14.0"
   },
   "devDependencies": {

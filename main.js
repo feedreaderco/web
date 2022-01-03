@@ -186,7 +186,8 @@
 	
 	function updateState() {
 	  var nextArticleIsCurrent = current.nextSibling.offsetTop < window.pageYOffset;
-	  var previousArticleIsCurrent = current.offsetTop > window.pageYOffset;
+	  var hasPreviousArticle = current.previousSibling.firstChild != null;
+	  var previousArticleIsCurrent = hasPreviousArticle && current.offsetTop > window.pageYOffset;
 	  if (nextArticleIsCurrent || previousArticleIsCurrent) {
 	    var id = current.id;
 	    var i = articles.indexOf(id);

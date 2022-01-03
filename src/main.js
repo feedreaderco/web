@@ -108,7 +108,8 @@ function refreshFeeds() {
 
 function updateState() {
   const nextArticleIsCurrent = current.nextSibling.offsetTop < window.pageYOffset;
-  const previousArticleIsCurrent = current.offsetTop > window.pageYOffset;
+  const hasPreviousArticle = current.previousSibling.firstChild != null;
+  const previousArticleIsCurrent = hasPreviousArticle && (current.offsetTop > window.pageYOffset);
   if (nextArticleIsCurrent || previousArticleIsCurrent) {
     const id = current.id;
     const i = articles.indexOf(id);

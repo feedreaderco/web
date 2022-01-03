@@ -14,7 +14,7 @@ const splitPathname = window.location.pathname.split('/');
 const isArticle = splitPathname[splitPathname.length - 1] === 'articles';
 const labelArticles = {};
 const userLinkDiv = document.getElementById('userLinkContainer');
-let hash = splitPathname.pop();
+let hash = window.location.hash;
 let pathname = splitPathname.join('/');
 let current;
 let articles;
@@ -123,7 +123,7 @@ function updateState() {
     const articleTitle = articleDiv.childNodes[0].firstChild.innerHTML;
     const feedTitle = articleDiv.childNodes[1].firstChild.innerHTML;
     document.title = `${articleTitle} - ${feedTitle} (feedreader.co)`;
-    history.replaceState({ id: current.id }, '', `https://${window.location.hostname}${pathname}${current.id}`);
+    history.replaceState({ id: current.id }, '', `https://${window.location.hostname}${pathname}#${current.id}`);
     if (token) {
       console.log(`Marking ${id} as read`);
       lib.user.labels.post('read', id).then(() => {
@@ -136,11 +136,6 @@ function updateState() {
 }
 
 pathname = `${pathname}/`;
-
-if ((hash.length !== 32) && (hash.length !== 40)) {
-  pathname = `${pathname}${hash}/`;
-  hash = '';
-}
 
 window.onscroll = updateState;
 

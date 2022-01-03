@@ -123,7 +123,7 @@ function updateState() {
     const articleTitle = articleDiv.childNodes[0].firstChild.innerHTML;
     const feedTitle = articleDiv.childNodes[1].firstChild.innerHTML;
     document.title = `${articleTitle} - ${feedTitle} (feedreader.co)`;
-    history.replaceState({ id: current.id }, '', `https://feedreader.co${pathname}${current.id}`);
+    history.replaceState({ id: current.id }, '', `https://${window.location.hostname}${pathname}${current.id}`);
     if (token) {
       console.log(`Marking ${id} as read`);
       lib.user.labels.post('read', id).then(() => {

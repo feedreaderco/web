@@ -81,7 +81,7 @@
 	var isArticle = splitPathname[splitPathname.length - 1] === 'articles';
 	var labelArticles = {};
 	var userLinkDiv = document.getElementById('userLinkContainer');
-	var hash = splitPathname.pop();
+	var hash = window.location.hash;
 	var pathname = splitPathname.join('/');
 	var current = void 0;
 	var articles = void 0;
@@ -201,7 +201,7 @@
 	    var articleTitle = articleDiv.childNodes[0].firstChild.innerHTML;
 	    var feedTitle = articleDiv.childNodes[1].firstChild.innerHTML;
 	    document.title = articleTitle + ' - ' + feedTitle + ' (feedreader.co)';
-	    history.replaceState({ id: current.id }, '', 'https://' + window.location.hostname + pathname + current.id);
+	    history.replaceState({ id: current.id }, '', 'https://' + window.location.hostname + pathname + '#' + current.id);
 	    if (token) {
 	      console.log('Marking ' + id + ' as read');
 	      lib.user.labels.post('read', id).then(function () {
@@ -214,11 +214,6 @@
 	}
 	
 	pathname = pathname + '/';
-	
-	if (hash.length !== 32 && hash.length !== 40) {
-	  pathname = '' + pathname + hash + '/';
-	  hash = '';
-	}
 	
 	window.onscroll = updateState;
 	

@@ -4,11 +4,21 @@
 # Bookmarklet redirect
 /bookmarklet/js /bookmarklet.js 301
 
-# SPA routing - serve HTML files for dynamic routes
+# Preserve existing links - redirect to folders (before /:user catch-all)
+/login /login/ 301
+/signup /signup 200
+/help /help/ 301
+/welcome /welcome/ 301
+/settings /settings/ 301
+/bookmarklet /bookmarklet/ 301
+
+# SPA routing - serve HTML files for dynamic routes (most specific first)
 /articles/:id/body /article 200
 /articles/:id /label 200
 /:user/labels/* /label 200
 /:user/folders/* /label 200
 /:user/feeds* /label 200
 /feeds/* /label 200
+
+# User pages - catch-all for usernames
 /:user /user 200

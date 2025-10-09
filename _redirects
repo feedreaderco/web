@@ -4,11 +4,11 @@
 # Bookmarklet redirect
 /bookmarklet/js /bookmarklet.js 301
 
-# SPA routing - serve HTML files for dynamic routes (order matters!)
-/articles/:id/body /article.html 200
-/articles/:id /label.html 200
-/:user/labels/* /label.html 200
-/:user/folders/* /label.html 200
-/:user/feeds* /label.html 200
-/feeds/* /label.html 200
-/:user /user.html 200
+# SPA routing - serve HTML files for dynamic routes
+/articles/:id/body /article 200
+/articles/:id /label 200
+/:user/labels/* /label 200
+/:user/folders/* /label 200
+/:user/feeds* /label 200
+/feeds/* /label 200
+/:user /user 200

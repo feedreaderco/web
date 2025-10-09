@@ -1,16 +1,14 @@
 # Redirect /api to the API server
 /api https://api.feedreader.co 301
 
-# SPA routing - serve index.html for user pages
+# Bookmarklet redirect
+/bookmarklet/js /bookmarklet.js 301
+
+# SPA routing - serve HTML files for dynamic routes (order matters!)
+/articles/:id/body /article.html 200
+/articles/:id /label.html 200
 /:user/labels/* /label.html 200
 /:user/folders/* /label.html 200
 /:user/feeds* /label.html 200
 /feeds/* /label.html 200
 /:user /user.html 200
-
-# Articles routing
-/articles/:id /label.html 200
-/articles/:id/body /article.html 200
-
-# Bookmarklet redirect
-/bookmarklet/js /bookmarklet.js 301

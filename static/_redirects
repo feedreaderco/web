@@ -16,7 +16,7 @@
 
 # Folder redirects - preserve existing links
 /login /login/index.html 200
-/signup /signup.html 200
+/signup /signup/index.html 200
 /help /help/ 301
 /welcome /welcome/ 301
 /settings /settings/ 301

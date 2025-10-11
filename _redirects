@@ -2,17 +2,17 @@
 /api https://api.feedreader.co 301
 /bookmarklet/js /bookmarklet.js 301
 
-# Static assets - pass through (prevent catch-all from matching)
+# Static assets - pass through using splat syntax (prevent catch-all from matching)
 # Reference: https://developers.cloudflare.com/pages/configuration/redirects/
-# "Redirects are always followed, regardless of whether or not an asset matches"
-/*.css /*.css 200
-/*.js /*.js 200
-/*.png /*.png 200
-/*.ico /*.ico 200
-/*.icns /*.icns 200
-/*.json /*.json 200
-/*.xml /*.xml 200
-/*.txt /*.txt 200
+# Splat pattern: "A splat (asterisk, *) will greedily match all characters"
+/*.css /:splat.css 200
+/*.js /:splat.js 200
+/*.png /:splat.png 200
+/*.ico /:splat.ico 200
+/*.icns /:splat.icns 200
+/*.json /:splat.json 200
+/*.xml /:splat.xml 200
+/*.txt /:splat.txt 200
 
 # Folder redirects - preserve existing links
 /login /login/ 301

@@ -1,10 +1,20 @@
-# Redirect /api to the API server
+# External redirects (highest priority)
 /api https://api.feedreader.co 301
-
-# Bookmarklet redirect
 /bookmarklet/js /bookmarklet.js 301
 
-# Preserve existing links - redirect to folders (before /:user catch-all)
+# Static assets - pass through (prevent catch-all from matching)
+# Reference: https://developers.cloudflare.com/pages/configuration/redirects/
+# "Redirects are always followed, regardless of whether or not an asset matches"
+/*.css /*.css 200
+/*.js /*.js 200
+/*.png /*.png 200
+/*.ico /*.ico 200
+/*.icns /*.icns 200
+/*.json /*.json 200
+/*.xml /*.xml 200
+/*.txt /*.txt 200
+
+# Folder redirects - preserve existing links
 /login /login/ 301
 /signup /signup 200
 /help /help/ 301
@@ -12,7 +22,7 @@
 /settings /settings/ 301
 /bookmarklet /bookmarklet/ 301
 
-# SPA routing - serve HTML files for dynamic routes (most specific first)
+# SPA routing - dynamic routes (most specific first)
 /articles/:id/body /article 200
 /articles/:id /label 200
 /:user/labels/* /label 200
@@ -20,5 +30,5 @@
 /:user/feeds* /label 200
 /feeds/* /label 200
 
-# User pages - catch-all for usernames
+# User pages - catch-all (MUST be last)
 /:user /user 200

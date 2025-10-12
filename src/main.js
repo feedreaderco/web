@@ -41,11 +41,10 @@ function storeLabelArticles(label) {
 }
 
 function getLabels() {
-  return lib.user.labels.get().then((response) => {
-    if (!response.labels) return;
-    const promiseArr = response.labels.map(storeLabelArticles);
-    Promise.all(promiseArr);
-  }).catch(console.error);
+  // Only fetch the labels we actually use in the UI
+  const labelsToFetch = ['favorites', 'reading-list'];
+  return Promise.all(labelsToFetch.map(storeLabelArticles))
+    .catch(console.error);
 }
 
 function displayArticle(article) {
